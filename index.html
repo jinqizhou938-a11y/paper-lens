@@ -187,6 +187,9 @@ a{color:var(--accent);text-decoration:none}
 .fig-thumb canvas{max-height:250px;box-shadow:0 1px 4px rgba(0,0,0,.12);background:#fff}
 .fig-page{position:absolute;top:8px;right:8px;font-size:11px;color:var(--ink2);background:rgba(255,255,255,.9);border:1px solid var(--line2);border-radius:6px;padding:1px 7px}
 .fig-cap{font-size:13px;color:var(--ink2);padding:11px 14px;line-height:1.6}
+.ai-fig-btn{margin:0 14px 4px;align-self:flex-start}
+.ai-fig-out{font-size:13px;color:var(--ink);background:rgba(201,126,27,.07);border:1px dashed rgba(201,126,27,.4);border-radius:8px;margin:2px 14px 12px;padding:9px 12px;line-height:1.65;white-space:pre-wrap;display:none}
+.ai-fig-out:not(:empty){display:block}
 .fig-kind{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--accent);margin-bottom:3px}
 .fig-kind svg{width:12px;height:12px}
 
@@ -522,6 +525,8 @@ html[lang="en"] .key-sent.ai-sum::before{content:'AI summary'}
       <label id="aiProviderLabel">服务商</label>
       <div class="m-providers" id="aiProviders">
         <button type="button" data-provider="doubao">豆包·方舟</button>
+        <button type="button" data-provider="deepseek">DeepSeek</button>
+        <button type="button" data-provider="glm">智谱 GLM</button>
         <button type="button" data-provider="openai">OpenAI</button>
         <button type="button" data-provider="custom">自定义</button>
       </div>
@@ -604,6 +609,7 @@ const I18N = {
     noFigs: '未检测到图表标题（可能为扫描版或无编号图表）。',
     noRefs: '未检测到参考文献段落。',
     eqLabel: '公式摘录（{n}）', noEqs: '未检测到独立公式行。',
+    figAi: 'AI 解释图表', figAiDoing: 'AI 正在解读该图表…', figAiNoImg: '该图表暂未生成预览图，无法发送给 AI。', toastAiBusy: 'AI 正在处理其他任务，请稍候',
     secMetaMin: '{n} 分钟', secMetaChar: '{n} 字', secKey: '关键句',
     tagCore: '核心', tagBg: '背景', tagMethod: '方法', tagRes: '结果',
     absByAI: '由 AI 生成',
@@ -620,6 +626,8 @@ const I18N = {
     aiProviderLabel: '服务商', aiBaseLabel: '接口地址 Base URL', aiModelLabel: '模型名称', aiKeyLabel: 'API Key',
     aiKeyHint: '火山方舟：在控制台「API Key 管理」中创建，接口地址形如 https://ark.cn-beijing.volces.com/api/v3',
     aiBaseHintDoubao: '豆包·火山方舟默认接口地址',
+    aiBaseHintDeepseek: 'DeepSeek 默认接口地址；模型可在下方修改（如 deepseek-flash / deepseek-v4-pro / deepseek-chat）',
+    aiBaseHintGlm: '智谱 GLM 默认接口地址；glm-5.3-flash 等视觉模型可解释论文图表',
     aiSecureTxt: '凭据仅保存在本机浏览器 localStorage，代码开源可审计。',
     aiSaveTxt: '保存', aiGenModalTxt: '保存并生成导读', aiCloseTxt: '关闭',
     aiGenTitle: 'AI 导读生成中…', aiGenSub: '正在分析论文并撰写导读，通常需要 20–60 秒。'
@@ -660,6 +668,7 @@ const I18N = {
     noFigs: 'No figure/table captions detected (scanned PDF or unnumbered figures).',
     noRefs: 'No references section detected.',
     eqLabel: 'Equations ({n})', noEqs: 'No standalone equation lines detected.',
+    figAi: 'Explain with AI', figAiDoing: 'AI is explaining this figure…', figAiNoImg: 'No preview available to send to AI.', toastAiBusy: 'AI is busy with another task, please wait',
     secMetaMin: '{n} min', secMetaChar: '{n} chars', secKey: 'Key sentence',
     tagCore: 'core', tagBg: 'background', tagMethod: 'method', tagRes: 'results',
     absByAI: 'by AI',
@@ -676,6 +685,8 @@ const I18N = {
     aiProviderLabel: 'Provider', aiBaseLabel: 'Base URL', aiModelLabel: 'Model', aiKeyLabel: 'API key',
     aiKeyHint: 'Volcano Ark: create an API key in the console; base URL is like https://ark.cn-beijing.volces.com/api/v3',
     aiBaseHintDoubao: 'Default base URL for Doubao / Volcano Ark',
+    aiBaseHintDeepseek: 'Default base URL for DeepSeek; model editable below (e.g. deepseek-flash / deepseek-v4-pro / deepseek-chat)',
+    aiBaseHintGlm: 'Default base URL for Zhipu GLM; vision models such as glm-5.3-flash can explain paper figures',
     aiSecureTxt: 'Credentials stay in this browser\u2019s localStorage; the code is open-source and auditable.',
     aiSaveTxt: 'Save', aiGenModalTxt: 'Save & generate', aiCloseTxt: 'Close',
     aiGenTitle: 'Generating AI guide\u2026', aiGenSub: 'Analyzing the paper and writing the guide; usually 20\u201360 seconds.'
@@ -740,10 +751,32 @@ function extractAuthors(meaningful, title){
   return out;
 }
 function extractAbstract(allText, lang){
-  const m = allText.match(/(?:^|\n)\s*(?:abstract|摘要)\b[:\s]*/i);
-  if (!m) return '';
+  const m = allText.match(/(?:^|\n)\s*(?:abstract\b|摘\s*要|【摘要】)[:\s：]*/i);
+  if (!m){
+    // 回退：期刊排版常见无“摘要”标签，取首页标题/作者之后第一段正文
+    const head = allText.slice(0, 8000).split('\n').map(s => s.trim()).filter(Boolean);
+    let start = -1, end = head.length;
+    for (let i = 0; i < head.length; i++){
+      const t = head[i];
+      if (t.length < 3) continue;
+      if (/^(?:abstract|摘\s*要|关键词|keyword|index\s*terms|作者|单位|机构)/i.test(t) && i < head.length - 1) continue;
+      if (start < 0 && t.length >= 40 && !/university|institute|school|college|laboratory|department|center|centre|corresponding|e-?mail|@|http|©|copyright|doi/i.test(t)){
+        start = i;
+        break;
+      }
+    }
+    if (start >= 0){
+      for (let j = start + 1; j < head.length; j++){
+        const t = head[j];
+        if (/^(?:keywords|关键词|关键字|index\s*terms)[：:\s]|^(?:一、|1[.．、]\s*)?(?:引言|绪论|introduction)/i.test(t)){ end = j; break; }
+        if (t.length <= 8 && KNOWN_SECTIONS.some(k => t.toLowerCase() === k)){ end = j; break; }
+      }
+      return head.slice(start, end).join(' ').replace(/\s+/g, ' ').slice(0, 3200);
+    }
+    return '';
+  }
   let seg = allText.slice(m.index + m[0].length);
-  const cut = seg.search(/\n\s*(?:index terms|keywords|关键词)\b|\n\s*(?:1\s*[.)]?\s*|1\.\s*)(?:introduction|引言|绪论)\b/i);
+  const cut = seg.search(/\n\s*(?:index\s*terms|keywords|关键词|关键字)[：:\s]|\n\s*(?:1\s*[.)]?\s*|1\.\s*|一、)(?:introduction|引言|绪论)/i);
   if (cut > 0) seg = seg.slice(0, cut);
   seg = seg.replace(/\n{2,}/g, '\n').trim();
   if (seg.length > 3200) seg = seg.slice(0, 3200);
@@ -751,10 +784,14 @@ function extractAbstract(allText, lang){
 }
 const KNOWN_SECTIONS = ['abstract','introduction','related work','background','preliminaries','methods','methodology','method','model','approach','system','framework','architecture','experiments','experimental setup','experimental results','results','results and discussion','evaluation','analysis','discussion','conclusion','conclusions','conclusion and future work','future work','limitations','references','acknowledgments','acknowledgements','appendix','appendices','supplementary material','supplementary','摘要','引言','绪论','概述','相关工作','背景','预备知识','方法','模型','系统','框架','实验','实验设置','实验结果','结果','结果与分析','结果与讨论','评估','分析','讨论','结论','结论与展望','未来工作','不足','参考文献','致谢','附录','补充材料'];
 const UNIT_LIKE = /^(GHz|MHz|kHz|Hz|dBm|dB|mm|cm|nm|um|V|W|A|ms|ns|GB|MB|KB|TB|Fig\.|Fig)$/i;
+const CN_NUM_PREFIX = /^(?:[一二三四五六七八九十百]+|[（(][一二三四五六七八九十百]+[）)]|\d+)\s*[、.．:：]?\s*/;
 function sectionNameScore(t, lang){
   const low = t.toLowerCase().replace(/[.、:：]/g, ' ').replace(/\s+/g, ' ').trim();
-  const known = KNOWN_SECTIONS.find(k => low === k || low.startsWith(k + ' '));
+  const bare = low.replace(CN_NUM_PREFIX, '');
+  const known = KNOWN_SECTIONS.find(k => bare === k || bare.startsWith(k + ' '));
   if (known) return 3;
+  const hasCnNum = /^[一二三四五六七八九十百]+(?:[、.．:：]|(?=\s))/.test(t) || /^[（(][一二三四五六七八九十百]+[）)]/.test(t);
+  if (lang === 'zh' && hasCnNum && /^[\u4e00-\u9fffA-Za-z0-9]{2,24}$/.test(bare) && !/[。；;！？?，,]/.test(bare)) return 2;
   const m = t.match(/^\s*(\d+(?:\.\d+){0,2})\s*[.)、]?\s*(.+)$/);
   if (!m) return 0;
   const rest = m[2].trim().replace(/[:：]$/,'').trim();
@@ -772,7 +809,7 @@ function sectionNameScore(t, lang){
   return 0;
 }
 function isRefLine(t){
-  if (/^\[\d+\]/.test(t)) return true;
+  if (/^\[\d+\]/.test(t) || /^［\d+］/.test(t)) return true;
   const m = t.match(/^(\d{1,3})[.)]\s+(.+)$/);
   if (m && /\b(19|20)\d{2}\b/.test(m[2]) && /^[A-Z]/.test(m[2])) return true;
   return false;
@@ -786,7 +823,11 @@ function extractSections(allLines, lang){
     const score = sectionNameScore(t, lang);
     if (score >= 2 && !isRefLine(t) && t.length <= 90){
       const m = t.match(/^\s*(\d+(?:\.\d+){0,2})\s*[.)、]?\s*(.+)$/);
-      const title = ((m ? m[2] : t) || '').trim().replace(/[:：]$/,'').trim();
+      let title = ((m ? m[2] : t) || '').trim().replace(/[:：]$/,'').trim();
+      if (/[\u4e00-\u9fff]/.test(title)){
+        const cj = title.search(/[。；;]/);
+        if (cj > 0) title = title.slice(0, cj);
+      }
       secs.push({ num: m ? m[1] : '', title, page: l.page, lines: [] });
       cur = secs[secs.length - 1];
     } else if (cur){
@@ -822,7 +863,7 @@ function extractReferences(lines){
     const t = (raw || '').trim();
     if (!t) continue;
     if (sectionNameScore(t, 0) >= 3 && /references|参考文献/i.test(t)) continue;
-    const m = t.match(/^\[(\d+)\]\s*(.+)$/) || t.match(/^(\d{1,3})[.)]\s+(.+)$/);
+    const m = t.match(/^\[(\d+)\]\s*(.+)$/) || t.match(/^［(\d+)］\s*(.+)$/) || t.match(/^(\d{1,3})[.)]\s+(.+)$/);
     if (m){
       out.push({ idx: parseInt(m[1], 10), text: m[2].trim() });
       continue;
@@ -833,10 +874,28 @@ function extractReferences(lines){
   }
   return out;
 }
+function extractMediaItems(allLines){
+  const figures = [], tables = [], equations = [];
+  for (const l of allLines){
+    const t = l.text.trim();
+    const fm = t.match(/\b(?:figure|fig\.?)\s*(\d+)/i);
+    const cm = t.match(/\b(?:table|tab\.?)\s*(\d+)/i);
+    const zm = t.match(/(?:^|[。；;：:])图\s*(\d+)/);
+    const zm2 = t.match(/(?:^|[。；;：:])表\s*(\d+)/);
+    if (fm || zm) figures.push({ idx: fm ? fm[1] : zm[1], caption: cleanCaption(t), page: l.page });
+    if (cm || zm2) tables.push({ idx: cm ? cm[1] : zm2[1], caption: cleanCaption(t), page: l.page });
+    if (isEqLine(t)) equations.push({ text: t.slice(0, 140), page: l.page });
+  }
+  return { figures, tables, equations };
+}
 async function extractPaper(arrayBuffer, fileName, onProgress){
   const pdfjsLib = window.pdfjsLib;
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
-  const task = pdfjsLib.getDocument({ data: arrayBuffer });
+  const task = pdfjsLib.getDocument({
+    data: arrayBuffer,
+    cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/',
+    cMapPacked: true
+  });
   if (onProgress) task.onProgress = p => onProgress(Math.min(0.9, Math.max(0.02, (p.loaded || 0) / (p.total || 1))), { page: 0, total: 0 });
   const pdf = await task.promise;
   const pages = [];
@@ -874,15 +933,9 @@ async function extractPaper(arrayBuffer, fileName, onProgress){
   const references = refsSec ? extractReferences(refsSec.lines) : [];
 
   const figures = [], tables = [], equations = [];
-  for (const l of allLines){
-    const t = l.text.trim();
-    const fm = t.match(/\b(?:figure|fig\.?|FIG\.?|FIGURE)\s*(\d+)/i);
-    const cm = t.match(/\b(?:table|tab\.?|TABLE)\s*(\d+)/i);
-    const zm = t.match(/^图\s*(\d+)/);
-    const zm2 = t.match(/^表\s*(\d+)/);
-    if (fm || zm) figures.push({ idx: fm ? fm[1] : zm[1], caption: cleanCaption(t), page: l.page });
-    if (cm || zm2) tables.push({ idx: cm ? cm[1] : zm2[1], caption: cleanCaption(t), page: l.page });
-    if (isEqLine(t)) equations.push({ text: t.slice(0, 140), page: l.page });
+  {
+    const media = extractMediaItems(allLines);
+    figures.push(...media.figures); tables.push(...media.tables); equations.push(...media.equations);
   }
   const dedupe = arr => {
     const seen = new Set(), out = [];
@@ -919,7 +972,7 @@ function extractTerms(text, lang, topN){
     const runs = text.match(/[\u4e00-\u9fff]{2,}/g) || [];
     const freq = new Map();
     for (const run of runs){
-      for (let n = 3; n >= 2; n--){
+      for (let n = 4; n >= 2; n--){
         for (let i = 0; i + n <= run.length; i++){
           const g = run.slice(i, i + n);
           if (isStopZh(g)) continue;
@@ -927,13 +980,14 @@ function extractTerms(text, lang, topN){
         }
       }
     }
-    const arr = [...freq.entries()].sort((a,b) => b[1] - a[1]);
-    const kept3 = new Set(arr.filter(e => e[0].length === 3 && e[1] >= 3).map(e => e[0]));
+    const arr = [...freq.entries()].sort((a,b) => b[1] - a[1] || b[0].length - a[0].length);
+    const kept = [];
     for (const [term, cnt] of arr){
       if (cnt < 3) continue;
-      if (term.length === 2 && kept3.has(term)) continue;
-      cand.push({ term, freq: cnt });
+      if (kept.some(k => k.includes(term))) continue;   // 已被更长/更高频词覆盖的碎片不再保留
+      kept.push(term);
     }
+    for (const term of kept) cand.push({ term, freq: freq.get(term) });
   } else {
     const words = (text.match(/[A-Za-z][A-Za-z\-']{2,}/g) || []).map(w => w.toLowerCase());
     const freq = new Map();
@@ -1013,6 +1067,11 @@ function heuristicTldr(paper){
       if (ks[0] && parts.length < 3 && !parts.some(p => p === ks[0] || (p.length > 40 && ks[0].startsWith(p.slice(0, 40))))) parts.push(ks[0]);
     }
   }
+  if (!parts.length){
+    const lead = splitSentences(paper.rawText).filter(s => s.length >= 30);
+    if (lead[0]) parts.push(lead[0]);
+    if (lead[1]) parts.push(lead[1]);
+  }
   return parts.join(' ').slice(0, 420);
 }
 function genQuiz(paper){
@@ -1053,7 +1112,9 @@ function genQuiz(paper){
   return qs;
 }
 function analyzePaper(paper){
-  const terms = extractTerms((paper.abstract + '\n' + paper.sections.map(s => s.title + ' ' + s.text).join('\n')).slice(0, 60000), paper.lang, 18);
+  let termsSrc = (paper.abstract + '\n' + paper.sections.map(s => s.title + ' ' + s.text).join('\n')).slice(0, 60000);
+  if (!termsSrc.trim()) termsSrc = paper.rawText.slice(0, 60000);
+  const terms = extractTerms(termsSrc, paper.lang, 18);
   const graph = buildGraph(terms, paper.rawText, 22);
   const en = paper.lang === 'en';
   const wordCount = s => en ? (s.match(/[A-Za-z][A-Za-z\-']+/g) || []).length : (s.match(/[\u4e00-\u9fff]/g) || []).length;
@@ -1129,6 +1190,8 @@ window.addEventListener('resize', () => CHARTS.forEach(c => c.resize()));
 /* ---------------- AI 增强 ---------------- */
 const AI_PROVIDERS = {
   doubao: { base: 'https://ark.cn-beijing.volces.com/api/v3', model: 'doubao-seed-1.6-250615', hintKey: 'aiBaseHintDoubao' },
+  deepseek: { base: 'https://api.deepseek.com', model: 'deepseek-flash', hintKey: 'aiBaseHintDeepseek' },
+  glm: { base: 'https://open.bigmodel.cn/api/paas/v4', model: 'glm-5.3-flash', hintKey: 'aiBaseHintGlm' },
   openai: { base: 'https://api.openai.com/v1', model: 'gpt-4o-mini', hintKey: '' },
   custom: { base: '', model: '', hintKey: '' }
 };
@@ -1417,6 +1480,8 @@ function renderFigures(){
       html += '<div class="fig">' +
         '<div class="fig-thumb" data-fig="' + i + '"><span class="fig-page">' + t('chipPages') + ' ' + f.page + '</span></div>' +
         '<div class="fig-cap"><span class="fig-kind">' + (f.kind === 'fig' ? t('chipFigures') : t('chipTables')) + ' ' + (f.idx || '') + '</span><br/>' + esc(f.caption) + '</div>' +
+        '<button class="btn btn-sm ai-fig-btn" data-fig="' + i + '" type="button">' + t('figAi') + '</button>' +
+        '<div class="ai-fig-out" data-out="' + i + '"></div>' +
       '</div>';
     });
     $('#figGrid').innerHTML = html;
@@ -1428,6 +1493,32 @@ function renderFigures(){
       }, { rootMargin: '240px' });
       io.observe(box);
     });
+    $('#figGrid').querySelectorAll('.ai-fig-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const i = parseInt(btn.dataset.fig, 10);
+        const out = $('#figGrid').querySelector('.ai-fig-out[data-out="' + btn.dataset.fig + '"]');
+        if (!out || !figs[i]) return;
+        if (state.aiBusy){ toast(t('toastAiBusy'), true); return; }
+        const cfg = aiConfig();
+        if (!cfg || !cfg.baseUrl || !cfg.apiKey){ toast(t('toastAiNoCfg'), true); openAiModal(true); return; }
+        state.aiBusy = true;
+        btn.disabled = true;
+        out.textContent = t('figAiDoing');
+        try {
+          const box = $('#figGrid').querySelector('.fig-thumb[data-fig="' + btn.dataset.fig + '"]');
+          const cv = box && box.querySelector('canvas');
+          if (!cv){ out.textContent = t('figAiNoImg'); return; }
+          const dataUrl = cv.toDataURL('image/jpeg', 0.82);
+          const text = await aiExplainImage(dataUrl, figs[i], state.paper);
+          out.textContent = text;
+        } catch(e){
+          out.textContent = T('toastAiFail', {e:(e.message || String(e)).slice(0, 200)});
+        } finally {
+          state.aiBusy = false;
+          btn.disabled = false;
+        }
+      });
+    });
   }
   const eqs = p.equations;
   if (eqs.length){
@@ -1436,6 +1527,34 @@ function renderFigures(){
   } else {
     $('#eqList').innerHTML = '<div class="empty-hint" style="margin-top:16px">' + t('noEqs') + '</div>';
   }
+}
+async function aiExplainImage(dataUrl, fig, paper){
+  const cfg = aiConfig();
+  if (!cfg || !cfg.baseUrl || !cfg.apiKey) throw new Error(t('toastAiNoCfg'));
+  const kindTxt = fig.kind === 'fig' ? (UI_LANG === 'zh' ? '图' : 'figure') : (UI_LANG === 'zh' ? '表' : 'table');
+  const prompt = (UI_LANG === 'zh'
+    ? '请解读论文中的这张' + kindTxt + '（页码 p.' + fig.page + '）：' + (fig.caption ? '图题：' + fig.caption + '。' : '') + '论文标题：' + paper.meta.title + '。请用简体中文简洁说明它展示的内容、主要发现或要点，不超过 120 字。'
+    : 'Explain this ' + kindTxt + ' from the paper (page ' + fig.page + '): ' + (fig.caption ? 'Caption: ' + fig.caption + '. ' : '') + 'Paper title: ' + paper.meta.title + '. Reply in English, at most 120 words: what it shows and the key point.');
+  const url = cfg.baseUrl.replace(/\/+$/, '') + '/chat/completions';
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.apiKey },
+    body: JSON.stringify({
+      model: cfg.model,
+      messages: [{ role: 'user', content: [
+        { type: 'text', text: prompt },
+        { type: 'image_url', image_url: { url: dataUrl } }
+      ]}],
+      max_tokens: 500,
+      temperature: 0.3
+    })
+  });
+  if (!res.ok){
+    const body = await res.text().catch(() => '');
+    throw new Error('HTTP ' + res.status + ' ' + body.slice(0, 160));
+  }
+  const data = await res.json();
+  return ((data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '').trim();
 }
 function highlightAll(text, q){
   if (!q) return esc(text);

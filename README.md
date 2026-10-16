@@ -20,7 +20,7 @@
 | 原文速览 | 按章节折叠阅读，关键句高亮，支持全文术语搜索与高亮 |
 | 自测练习 | 由关键句自动生成填空与归位题，读完即练 |
 | 双语言界面 | 中文 / English 界面一键切换 |
-| AI 导读（可选） | 接入任意 OpenAI 兼容接口（豆包·火山方舟 / DeepSeek / OpenAI 等），生成双语 TL;DR、章节导读、概念解释与自测题 |
+| AI 导读（可选） | 接入任意 OpenAI 兼容接口（豆包·火山方舟 / DeepSeek / 智谱 GLM / OpenAI 等），生成双语 TL;DR、章节导读、概念解释与自测题；图表卡片的「AI 解释」按钮可把图表缩略图发送给多模态模型解读 |
 
 ## 快速开始
 
@@ -40,18 +40,22 @@ npx serve .
 ## AI 导读配置（可选）
 
 1. 点击右上角 **AI** 按钮；
-2. 选择服务商（豆包·火山方舟 / OpenAI / 自定义），或填写任意 OpenAI 兼容接口的 Base URL、模型名与 API Key；
+2. 选择服务商（豆包·方舟 / **DeepSeek** / **智谱 GLM** / OpenAI / 自定义），或填写任意 OpenAI 兼容接口的 Base URL、模型名与 API Key；
 3. 点击「保存并生成导读」。
 
 - 火山方舟：控制台创建 API Key，Base URL 形如 `https://ark.cn-beijing.volces.com/api/v3`，模型如 `doubao-seed-1.6-250615`。
+- DeepSeek：Base URL `https://api.deepseek.com`，模型如 `deepseek-flash` / `deepseek-v4-pro` / `deepseek-chat`。
+- 智谱 GLM：Base URL `https://open.bigmodel.cn/api/paas/v4`，`glm-5.3-flash` 等视觉模型可解释论文图表。
 - 凭据仅保存在**本机浏览器 localStorage**，代码开源可审计；AI 结果也会缓存在本地，同篇论文同语言不会重复调用。
+
+> 出于安全考虑，仓库中不内置任何 API Key，请在你自己的浏览器中填入。
 
 ## 技术说明
 
 - 纯前端静态站点，单文件 `index.html`，无构建步骤，无后端；
-- PDF 解析：`pdf.js`（jsDelivr CDN），文本提取与结构识别全部在浏览器本地完成；
+- PDF 解析：`pdf.js`（jsDelivr CDN），**内置 Adobe CJK CMap（UniGB-UCS2-H 等）**，可正确解码缺 ToUnicode 的中文期刊 PDF（CNKI 等排版），并支持「一、二、三」「（一）」「1.」等中文章节序号与「图1/表1/［1］」参考文献格式；
 - 图表：`ECharts`（jsDelivr CDN）；
-- 术语提取：英文分词 + 中文 n-gram，TF-IDF 加权；概念图按句内共现建边；
+- 术语提取：英文分词 + 中文 2–4 字 n-gram（碎片去重），TF-IDF 加权；概念图按句内共现建边；
 - 关键句：位置 + 术语命中 + 长度综合打分。
 
 ## 目录结构
@@ -60,10 +64,12 @@ npx serve .
 paper-lens/
 ├── index.html          # 全部页面、样式与逻辑（单文件应用）
 ├── samples/
-│   ├── sample-paper.pdf  # 示例论文（虚构内容，供演示）
-│   └── sample-paper.txt  # 示例论文纯文本（可读参考）
+│   ├── sample-paper.pdf   # 英文示例论文（虚构内容，供演示）
+│   ├── sample-paper.txt   # 英文示例论文纯文本（可读参考）
+│   └── cn-sample-paper.pdf  # 中文示例论文（报告lab 生成，含 CJK 内嵌字体，供中文解析演示）
 └── tools/
-    └── make_sample_pdf.py  # 重新生成示例论文 PDF（纯 Python 标准库）
+    ├── make_sample_pdf.py  # 重新生成英文示例 PDF（纯 Python 标准库）
+    └── make_cn_sample.py   # 重新生成中文示例 PDF（需 reportlab）
 ```
 
 ## 已知边界

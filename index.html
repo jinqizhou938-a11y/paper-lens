@@ -198,7 +198,7 @@ a{color:var(--accent);text-decoration:none}
 .txt-toolbar{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
 .searchbox{position:relative;flex:1;min-width:200px;max-width:420px}
 .searchbox svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--ink3);pointer-events:none}
-.searchbox input{width:100%;padding:9px 34px 9px 34px;border:1px solid var(--line2);border-radius:9px;background:var(--card);font-size:14px;color:var(--ink)}
+.searchbox input{width:100%;padding:9px 34px 9px 34px;border:1px solid var(--line2);border-radius:9px;background:var(--card);font-size:16px;color:var(--ink)}
 .searchbox input:focus{border-color:var(--accent);outline:none}
 .searchbox .x{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:6px;color:var(--ink3);font-size:14px;line-height:1}
 .searchbox .x:hover{background:var(--bg2);color:var(--ink)}
@@ -259,7 +259,7 @@ mark{background:var(--amberLine);color:var(--ink);padding:0 2px;border-radius:3p
 .modal .m-sub{font-size:12.5px;color:var(--ink3);margin-top:5px;line-height:1.6}
 .m-field{margin-top:15px}
 .m-field label{display:block;font-size:12.5px;font-weight:600;color:var(--ink2);margin-bottom:5px}
-.m-field select,.m-field input{width:100%;padding:9px 11px;border:1px solid var(--line2);border-radius:8px;background:var(--bg2);font-size:14px;color:var(--ink)}
+.m-field select,.m-field input{width:100%;padding:9px 11px;border:1px solid var(--line2);border-radius:8px;background:var(--bg2);font-size:16px;color:var(--ink)}
 .m-field select:focus,.m-field input:focus{border-color:var(--accent);outline:none}
 .m-field .hint{font-size:11.5px;color:var(--ink3);margin-top:4px}
 .m-actions{display:flex;gap:9px;margin-top:20px;flex-wrap:wrap}
@@ -319,7 +319,7 @@ html[lang="en"] .key-sent.ai-sum::before{content:'AI summary'}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.9 2.4L22 18l-2.1.6L19 21l-.9-2.4L16 18l2.1-.6z"/></svg>
       <span id="aiBtnTxt">AI</span>
     </button>
-    <a class="iconbtn github-link" id="ghLink" href="https://github.com/" target="_blank" rel="noopener" title="GitHub">
+    <a class="iconbtn github-link" id="ghLink" href="https://github.com/jinqizhou938-a11y/paper-lens" target="_blank" rel="noopener" title="GitHub">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.73-1.53-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 2.87-.39c.97 0 1.95.13 2.87.39 2.19-1.49 3.15-1.18 3.15-1.18.62 1.58.23 2.75.11 3.04.73.81 1.18 1.83 1.18 3.09 0 4.41-2.69 5.38-5.25 5.66.41.35.78 1.05.78 2.12 0 1.53-.01 2.76-.01 3.13 0 .31.2.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
     </a>
   </div>
@@ -329,12 +329,12 @@ html[lang="en"] .key-sent.ai-sum::before{content:'AI summary'}
   <!-- ============ 视图：首页 ============ -->
   <section id="homeView">
     <div class="hero">
-      <h1>把一篇论文，<span class="hl">读成一幅地图</span></h1>
+      <h1><span id="heroTitle1">把一篇论文，</span><span class="hl" id="heroTitle2">读成一幅地图</span></h1>
       <p class="hero-sub" id="heroSub">上传论文 PDF，自动提取章节结构、核心术语与图表，生成一份可交互的学习页——阅读路线、概念图谱、图表速查与自测练习，界面语言一键切换。</p>
       <div class="hero-langs">
-        <span class="langpill">简体中文</span>
-        <span class="langpill">English</span>
-        <span class="langpill">可选 AI 导读</span>
+        <span class="langpill" id="langpill1">简体中文</span>
+        <span class="langpill" id="langpill2">English</span>
+        <span class="langpill" id="langpill3">可选 AI 导读</span>
       </div>
     </div>
 
@@ -569,6 +569,8 @@ html[lang="en"] .key-sent.ai-sum::before{content:'AI summary'}
    ================================================================ */
 const I18N = {
   zh: {
+    heroTitle1: '把一篇论文，', heroTitle2: '读成一幅地图',
+    langpill1: '简体中文', langpill2: 'English', langpill3: '可选 AI 导读',
     heroSub: '上传论文 PDF，自动提取章节结构、核心术语与图表，生成一份可交互的学习页——阅读路线、概念图谱、图表速查与自测练习，界面语言一键切换。',
     dzTitle: '拖拽论文 PDF 到这里', dzSub: '或点击选择文件 · 支持 .pdf，最大 80MB',
     pickBtnTxt: '选择文件', demoBtnTxt: '试试示例论文',
@@ -623,6 +625,8 @@ const I18N = {
     aiGenTitle: 'AI 导读生成中…', aiGenSub: '正在分析论文并撰写导读，通常需要 20–60 秒。'
   },
   en: {
+    heroTitle1: 'Turn a paper into ', heroTitle2: 'a readable map',
+    langpill1: 'Simplified Chinese', langpill2: 'English', langpill3: 'Optional AI guide',
     heroSub: 'Drop in a paper PDF and get an interactive learning page: reading roadmap, core terms, figure index, concept graph and self-quiz, with a one-click language switch.',
     dzTitle: 'Drag & drop a paper PDF here', dzSub: 'or click to choose · .pdf, up to 80MB',
     pickBtnTxt: 'Choose file', demoBtnTxt: 'Try sample paper',
@@ -682,7 +686,7 @@ function t(k){ const d = I18N[UI_LANG] || I18N.zh; return (d[k] != null) ? d[k] 
 function T(k, vars){ let s = t(k); if (vars) for (const key in vars) s = s.replace(new RegExp('\\{'+key+'\\}', 'g'), vars[key]); return s; }
 function fmt(n){ return (n == null) ? '0' : Number(n).toLocaleString(); }
 function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function $(id){ return document.getElementById(id); }
+function $(id){ return document.getElementById(String(id).replace(/^#/, '')); }
 function hashStr(s){ let h = 2166136261; for (let i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); }
 function splitSentences(text){
   const t = String(text||'').replace(/\s+/g,' ').trim();
@@ -736,7 +740,7 @@ function extractAuthors(meaningful, title){
   return out;
 }
 function extractAbstract(allText, lang){
-  const m = allText.match(/(?:^|\n)\s*(abstract|ABSTRACT|摘要)\b[:\s]*/);
+  const m = allText.match(/(?:^|\n)\s*(?:abstract|摘要)\b[:\s]*/i);
   if (!m) return '';
   let seg = allText.slice(m.index + m[0].length);
   const cut = seg.search(/\n\s*(?:index terms|keywords|关键词)\b|\n\s*(?:1\s*[.)]?\s*|1\.\s*)(?:introduction|引言|绪论)\b/i);
@@ -882,7 +886,7 @@ async function extractPaper(arrayBuffer, fileName, onProgress){
   }
   const dedupe = arr => {
     const seen = new Set(), out = [];
-    for (const it of arr){ const k = it.idx + '|' + it.page + '|' + it.caption.slice(0, 30); if (!seen.has(k)){ seen.add(k); out.push(it); } }
+    for (const it of arr){ const k = (it.idx || '') + '|' + it.page + '|' + (it.caption || it.text || '').slice(0, 30); if (!seen.has(k)){ seen.add(k); out.push(it); } }
     return out;
   };
   const paper = {
@@ -1004,8 +1008,9 @@ function heuristicTldr(paper){
   if (parts.length < 3){
     for (const sec of paper.sections.slice(0, 2)){
       if (parts.length >= 3) break;
+      if (/^(abstract|摘要)$/i.test(sec.title.trim())) continue;
       const ks = keySentences(sec.text, paper.terms, 1);
-      if (ks[0] && parts.length < 3) parts.push(ks[0]);
+      if (ks[0] && parts.length < 3 && !parts.some(p => p === ks[0] || (p.length > 40 && ks[0].startsWith(p.slice(0, 40))))) parts.push(ks[0]);
     }
   }
   return parts.join(' ').slice(0, 420);
@@ -1185,6 +1190,11 @@ function applyLang(){
   document.documentElement.lang = UI_LANG === 'zh' ? 'zh-CN' : 'en';
   $('#langZh').classList.toggle('on', UI_LANG === 'zh');
   $('#langEn').classList.toggle('on', UI_LANG === 'en');
+  $('#heroTitle1').textContent = t('heroTitle1');
+  $('#heroTitle2').textContent = t('heroTitle2');
+  $('#langpill1').textContent = t('langpill1');
+  $('#langpill2').textContent = t('langpill2');
+  $('#langpill3').textContent = t('langpill3');
   $('#heroSub').textContent = t('heroSub');
   $('#dzTitle').textContent = t('dzTitle');
   $('#dzSub').textContent = t('dzSub');

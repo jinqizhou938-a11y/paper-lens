@@ -123,13 +123,16 @@ def content_stream(page):
 
 def build():
     n_pages = len(PAGES)
+    f1 = 2 + 2 * n_pages + 1          # 字体对象位于所有页面/内容对象之后
+    f2 = f1 + 1
     objs = []
     objs.append(b'<< /Type /Catalog /Pages 2 0 R >>')
     kids = ' '.join('%d 0 R' % (3 + 2 * i) for i in range(n_pages))
     objs.append(b'<< /Type /Pages /Kids [%s] /Count %d >>' % (kids.encode(), n_pages))
     for i in range(n_pages):
         objs.append(b'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 %d %d] /Contents %d 0 R '
-                    b'/Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>' % (PAGE_W, PAGE_H, 4 + 2 * i))
+                    b'/Resources << /Font << /F1 %d 0 R /F2 %d 0 R >> >> >>'
+                    % (PAGE_W, PAGE_H, 4 + 2 * i, f1, f2))
         objs.append(content_stream(PAGES[i]))
     objs.append(b'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>')
     objs.append(b'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>')

@@ -6,6 +6,9 @@
 
 > 解析完全在本地浏览器中进行，论文内容不会上传到任何服务器。
 
+- 源码仓库：<https://github.com/jinqizhou938-a11y/paper-lens>
+- 在线体验（GitHub Pages）：<https://jinqizhou938-a11y.github.io/paper-lens/>
+
 ## 功能
 
 | 模块 | 说明 |

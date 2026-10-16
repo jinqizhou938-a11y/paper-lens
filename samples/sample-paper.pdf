@@ -1,0 +1,132 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R 5 0 R 7 0 R 9 0 R] /Count 4 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 2083 >>
+stream
+BT /F2 18.0 Tf 72 696 Td (Neural Attention for Cross-Lingual Document Comprehension) Tj ET
+BT /F1 12.0 Tf 72 671 Td (Alice Zhang, Bob Martin and Carol Lee) Tj ET
+BT /F2 13.0 Tf 72 639 Td (Abstract) Tj ET
+BT /F1 12.0 Tf 72 603 Td (We present a neural attention framework for cross-lingual document comprehension. The) Tj ET
+BT /F1 12.0 Tf 72 587 Td (model aligns word embeddings across languages with a shared transformer encoder and a) Tj ET
+BT /F1 12.0 Tf 72 571 Td (token-level attention scorer. On two multilingual benchmarks, our approach improves) Tj ET
+BT /F1 12.0 Tf 72 555 Td (exact-match accuracy by 4.2 points over the previous state of the art, while reducing) Tj ET
+BT /F1 12.0 Tf 72 539 Td (inference latency by 18 percent. We further analyze the learned attention weights and) Tj ET
+BT /F1 12.0 Tf 72 523 Td (show that cross-lingual alignment emerges in the lower layers of the encoder.) Tj ET
+BT /F1 12.0 Tf 72 507 Td (Keywords: attention, transformer, cross-lingual, embedding, benchmark) Tj ET
+BT /F2 13.0 Tf 72 475 Td (1. Introduction) Tj ET
+BT /F1 12.0 Tf 72 439 Td (Understanding documents across languages is central to multilingual information) Tj ET
+BT /F1 12.0 Tf 72 423 Td (retrieval and question answering. Existing systems translate the input text before) Tj ET
+BT /F1 12.0 Tf 72 407 Td (comprehension, which introduces propagation errors and extra latency. In this paper we) Tj ET
+BT /F1 12.0 Tf 72 391 Td (propose a single model that reads the source language directly and reasons over a) Tj ET
+BT /F1 12.0 Tf 72 375 Td (shared embedding space. Our main contribution is a token-level attention mechanism) Tj ET
+BT /F1 12.0 Tf 72 359 Td (that reweights source tokens according to their relevance to the query, independent of) Tj ET
+BT /F1 12.0 Tf 72 343 Td (the surface language. We evaluate the framework on two public benchmarks and report) Tj ET
+BT /F1 12.0 Tf 72 327 Td (both accuracy and latency.) Tj ET
+BT /F1 11.0 Tf 72 311 Td (Figure 1: Overview of the proposed attention-based framework, including the shared encoder and the token scorer.) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 6 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+6 0 obj
+<< /Length 1390 >>
+stream
+BT /F2 13.0 Tf 72 696 Td (2. Related Work) Tj ET
+BT /F1 12.0 Tf 72 660 Td (Cross-lingual embeddings. Multilingual word embeddings such as MUSE and LASER project) Tj ET
+BT /F1 12.0 Tf 72 644 Td (several languages into one space. However, they are static and do not adapt to the) Tj ET
+BT /F1 12.0 Tf 72 628 Td (document context. Neural machine translation approaches treat the problem as a) Tj ET
+BT /F1 12.0 Tf 72 612 Td (translation task and lose token-level interpretability. The transformer architecture) Tj ET
+BT /F1 12.0 Tf 72 596 Td (proposed by Vaswani et al. provides the backbone for our encoder, while recent work on) Tj ET
+BT /F1 12.0 Tf 72 580 Td (attention visualization motivates the interpretability analysis in Section 4.) Tj ET
+BT /F1 11.0 Tf 72 564 Td (Table 1: Benchmark datasets used in the experiments, with language pairs and average document length.) Tj ET
+BT /F2 13.0 Tf 72 532 Td (2.1 Transformer basics) Tj ET
+BT /F1 12.0 Tf 72 496 Td (The transformer processes a sequence of tokens with self-attention layers, producing a) Tj ET
+BT /F1 12.0 Tf 72 480 Td (contextual representation for every token. Each head computes queries, keys and values) Tj ET
+BT /F1 12.0 Tf 72 464 Td (from the input, and the output is a weighted sum of the values. Multi-head attention) Tj ET
+BT /F1 12.0 Tf 72 448 Td (allows the model to attend to different subspaces in parallel.) Tj ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 8 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+8 0 obj
+<< /Length 1343 >>
+stream
+BT /F2 13.0 Tf 72 696 Td (3. Method) Tj ET
+BT /F1 12.0 Tf 72 660 Td (Our framework contains three components: a shared encoder, a token-level attention) Tj ET
+BT /F1 12.0 Tf 72 644 Td (scorer and a prediction head. The encoder maps tokens of any supported language into a) Tj ET
+BT /F1 12.0 Tf 72 628 Td (common representation space, and the scorer computes a relevance distribution over the) Tj ET
+BT /F1 12.0 Tf 72 612 Td (source tokens for a given query. The final prediction is produced by the head from the) Tj ET
+BT /F1 12.0 Tf 72 596 Td (attended representation.) Tj ET
+BT /F1 11.0 Tf 72 580 Td (score\(q, k\) = q * k / sqrt\(d\)) Tj ET
+BT /F2 13.0 Tf 72 548 Td (3.1 Model architecture) Tj ET
+BT /F1 12.0 Tf 72 512 Td (The encoder is a 6-layer transformer with 8 attention heads and hidden size 512. We) Tj ET
+BT /F1 12.0 Tf 72 496 Td (share all parameters across languages and train with a masked language modeling) Tj ET
+BT /F1 12.0 Tf 72 480 Td (objective before fine-tuning on the downstream task. The attention scorer takes the) Tj ET
+BT /F1 12.0 Tf 72 464 Td (query representation and the encoder outputs, and applies a bilinear score before) Tj ET
+BT /F1 12.0 Tf 72 448 Td (softmax normalization.) Tj ET
+BT /F1 11.0 Tf 72 432 Td (Figure 2: Training loss curves on the two benchmarks, showing convergence within 20 epochs.) Tj ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 10 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+10 0 obj
+<< /Length 1945 >>
+stream
+BT /F2 13.0 Tf 72 696 Td (4. Experiments) Tj ET
+BT /F1 12.0 Tf 72 660 Td (We evaluate on two multilingual benchmarks: XQuAD-R and MLQA-R. We compare against) Tj ET
+BT /F1 12.0 Tf 72 644 Td (three baselines: translate-then-read, static embeddings and a cross-lingual) Tj ET
+BT /F1 12.0 Tf 72 628 Td (transformer without the token scorer. All models share the same parameter budget and) Tj ET
+BT /F1 12.0 Tf 72 612 Td (training schedule.) Tj ET
+BT /F2 13.0 Tf 72 596 Td (4.1 Results) Tj ET
+BT /F1 12.0 Tf 72 560 Td (Our framework achieves an exact-match score of 61.3 on XQuAD-R and 58.9 on MLQA-R,) Tj ET
+BT /F1 12.0 Tf 72 544 Td (outperforming the strongest baseline by 4.2 and 3.8 points respectively. The attention) Tj ET
+BT /F1 12.0 Tf 72 528 Td (visualization shows that lower layers align tokens across languages, while upper) Tj ET
+BT /F1 12.0 Tf 72 512 Td (layers focus on query-relevant content. Inference latency is 18 percent lower than the) Tj ET
+BT /F1 12.0 Tf 72 496 Td (translate-then-read pipeline.) Tj ET
+BT /F2 13.0 Tf 72 480 Td (5. Conclusion) Tj ET
+BT /F1 12.0 Tf 72 444 Td (We presented a cross-lingual attention framework that reads the source language) Tj ET
+BT /F1 12.0 Tf 72 428 Td (directly and learns token-level alignment without translation. The approach improves) Tj ET
+BT /F1 12.0 Tf 72 412 Td (accuracy on two benchmarks and reduces latency. Future work includes extending the) Tj ET
+BT /F1 12.0 Tf 72 396 Td (framework to more language families and document-level tasks such as summarization.) Tj ET
+BT /F2 13.0 Tf 72 380 Td (References) Tj ET
+BT /F1 11.0 Tf 72 360 Td ([1] Vaswani et al., Attention is all you need, NeurIPS 2017.) Tj ET
+BT /F1 11.0 Tf 72 344 Td ([2] Conneau et al., Unsupervised cross-lingual representation learning at scale, ACL 2020.) Tj ET
+BT /F1 11.0 Tf 72 328 Td ([3] Artetxe and Schwenk, Massively multilingual sentence embeddings for zero-shot cross-lingual transfer, EMNLP 2019.) Tj ET
+endstream
+endobj
+11 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+12 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+xref
+0 13
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000133 00000 n 
+0000000269 00000 n 
+0000002403 00000 n 
+0000002539 00000 n 
+0000003980 00000 n 
+0000004116 00000 n 
+0000005510 00000 n 
+0000005647 00000 n 
+0000007644 00000 n 
+0000007715 00000 n 
+trailer
+<< /Size 13 /Root 1 0 R >>
+startxref
+7791
+%%EOF

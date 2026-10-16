@@ -1,0 +1,67 @@
+Neural Attention for Cross-Lingual Document Comprehension
+Alice Zhang, Bob Martin and Carol Lee
+Abstract
+We present a neural attention framework for cross-lingual document comprehension. The
+model aligns word embeddings across languages with a shared transformer encoder and a
+token-level attention scorer. On two multilingual benchmarks, our approach improves
+exact-match accuracy by 4.2 points over the previous state of the art, while reducing
+inference latency by 18 percent. We further analyze the learned attention weights and
+show that cross-lingual alignment emerges in the lower layers of the encoder.
+Keywords: attention, transformer, cross-lingual, embedding, benchmark
+1. Introduction
+Understanding documents across languages is central to multilingual information
+retrieval and question answering. Existing systems translate the input text before
+comprehension, which introduces propagation errors and extra latency. In this paper we
+propose a single model that reads the source language directly and reasons over a
+shared embedding space. Our main contribution is a token-level attention mechanism
+that reweights source tokens according to their relevance to the query, independent of
+the surface language. We evaluate the framework on two public benchmarks and report
+both accuracy and latency.
+Figure 1: Overview of the proposed attention-based framework, including the shared encoder and the token scorer.
+2. Related Work
+Cross-lingual embeddings. Multilingual word embeddings such as MUSE and LASER project
+several languages into one space. However, they are static and do not adapt to the
+document context. Neural machine translation approaches treat the problem as a
+translation task and lose token-level interpretability. The transformer architecture
+proposed by Vaswani et al. provides the backbone for our encoder, while recent work on
+attention visualization motivates the interpretability analysis in Section 4.
+Table 1: Benchmark datasets used in the experiments, with language pairs and average document length.
+2.1 Transformer basics
+The transformer processes a sequence of tokens with self-attention layers, producing a
+contextual representation for every token. Each head computes queries, keys and values
+from the input, and the output is a weighted sum of the values. Multi-head attention
+allows the model to attend to different subspaces in parallel.
+3. Method
+Our framework contains three components: a shared encoder, a token-level attention
+scorer and a prediction head. The encoder maps tokens of any supported language into a
+common representation space, and the scorer computes a relevance distribution over the
+source tokens for a given query. The final prediction is produced by the head from the
+attended representation.
+score(q, k) = q * k / sqrt(d)
+3.1 Model architecture
+The encoder is a 6-layer transformer with 8 attention heads and hidden size 512. We
+share all parameters across languages and train with a masked language modeling
+objective before fine-tuning on the downstream task. The attention scorer takes the
+query representation and the encoder outputs, and applies a bilinear score before
+softmax normalization.
+Figure 2: Training loss curves on the two benchmarks, showing convergence within 20 epochs.
+4. Experiments
+We evaluate on two multilingual benchmarks: XQuAD-R and MLQA-R. We compare against
+three baselines: translate-then-read, static embeddings and a cross-lingual
+transformer without the token scorer. All models share the same parameter budget and
+training schedule.
+4.1 Results
+Our framework achieves an exact-match score of 61.3 on XQuAD-R and 58.9 on MLQA-R,
+outperforming the strongest baseline by 4.2 and 3.8 points respectively. The attention
+visualization shows that lower layers align tokens across languages, while upper
+layers focus on query-relevant content. Inference latency is 18 percent lower than the
+translate-then-read pipeline.
+5. Conclusion
+We presented a cross-lingual attention framework that reads the source language
+directly and learns token-level alignment without translation. The approach improves
+accuracy on two benchmarks and reduces latency. Future work includes extending the
+framework to more language families and document-level tasks such as summarization.
+References
+[1] Vaswani et al., Attention is all you need, NeurIPS 2017.
+[2] Conneau et al., Unsupervised cross-lingual representation learning at scale, ACL 2020.
+[3] Artetxe and Schwenk, Massively multilingual sentence embeddings for zero-shot cross-lingual transfer, EMNLP 2019.

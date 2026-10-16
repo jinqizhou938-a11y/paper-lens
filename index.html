@@ -47,6 +47,10 @@ a{color:var(--accent);text-decoration:none}
 .lang-switch{display:flex;background:var(--bg2);border:1px solid var(--line2);border-radius:9px;padding:3px;gap:2px}
 .lang-switch button{padding:4px 11px;border-radius:7px;font-size:13px;font-weight:500;color:var(--ink2)}
 .lang-switch button.on{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+.paper-lang{display:flex;align-items:center;gap:3px;background:var(--bg2);border:1px solid var(--line2);border-radius:9px;padding:3px 5px}
+.paper-lang-label{font-size:11.5px;color:var(--ink3);padding:0 3px;white-space:nowrap}
+.paper-lang button{padding:4px 9px;border-radius:7px;font-size:12.5px;font-weight:500;color:var(--ink2);transition:background .15s,color .15s}
+.paper-lang button.on{background:var(--accent);color:#fff}
 .iconbtn{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:9px;font-size:13.5px;font-weight:500;color:var(--ink2);border:1px solid var(--line2);background:var(--bg2);transition:border-color .15s,color .15s,background .15s}
 .iconbtn:hover{border-color:var(--accent);color:var(--accent)}
 .iconbtn svg{width:15px;height:15px;flex:none}
@@ -109,6 +113,9 @@ a{color:var(--accent);text-decoration:none}
 .paper-kind svg{width:13px;height:13px}
 .paper-title{font-family:var(--serif);font-weight:900;font-size:23px;line-height:1.4;margin-top:12px}
 .paper-authors{color:var(--ink2);font-size:13.5px;margin-top:6px}
+.tr-flag{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--green);background:var(--greenSoft);border-radius:999px;padding:2px 9px;margin-top:4px;font-weight:500}
+.abs-sub{margin-top:12px}
+.abs-muted{color:var(--ink3)}
 .paper-meta{margin-top:12px;display:flex;flex-wrap:wrap;gap:7px}
 .chip{font-size:12.5px;color:var(--ink2);background:var(--card);border:1px solid var(--line2);border-radius:999px;padding:3px 11px;white-space:nowrap}
 .chip b{color:var(--ink);font-weight:600}
@@ -128,6 +135,10 @@ a{color:var(--accent);text-decoration:none}
 
 /* panels & cards */
 .panels{padding:18px 0 60px}
+.panel{animation:panelIn .3s ease}
+@keyframes panelIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.read-progress{position:fixed;top:0;left:0;right:0;z-index:45;height:3px;pointer-events:none;background:transparent}
+.read-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--amber));border-radius:0 3px 3px 0;transition:width .12s linear}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow)}
 .card-h{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--ink3);letter-spacing:.06em;margin-bottom:12px}
 .card-h::before{content:'';width:8px;height:8px;border-radius:2px;background:var(--accent);flex:none}
@@ -172,7 +183,8 @@ a{color:var(--accent);text-decoration:none}
 
 /* concepts */
 .concept-grid{display:grid;grid-template-columns:1fr;gap:12px}
-.concept{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.concept{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:14px 16px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}
+.concept:hover{border-color:var(--line2);box-shadow:0 4px 14px rgba(35,38,47,.07);transform:translateY(-1px)}
 .concept-head{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
 .concept-term{font-family:var(--serif);font-weight:700;font-size:16.5px;color:var(--accentDeep)}
 .concept-freq{font-size:11.5px;color:var(--ink3);background:var(--card);border:1px solid var(--line2);border-radius:999px;padding:1px 8px}
@@ -185,6 +197,7 @@ a{color:var(--accent);text-decoration:none}
 .fig{background:var(--bg2);border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .fig-thumb{background:#EFEDE6;display:flex;justify-content:center;align-items:flex-start;padding:12px;position:relative;min-height:120px}
 .fig-thumb canvas{max-height:250px;box-shadow:0 1px 4px rgba(0,0,0,.12);background:#fff}
+.fig-thumb img.fig-img{max-height:340px;box-shadow:0 1px 6px rgba(0,0,0,.14);background:#fff;border:1px solid var(--line)}
 .fig-page{position:absolute;top:8px;right:8px;font-size:11px;color:var(--ink2);background:rgba(255,255,255,.9);border:1px solid var(--line2);border-radius:6px;padding:1px 7px}
 .fig-cap{font-size:13px;color:var(--ink2);padding:11px 14px;line-height:1.6}
 .ai-fig-btn{margin:0 14px 4px;align-self:flex-start}
@@ -283,6 +296,17 @@ html[lang="en"] .key-sent.ai-sum::before{content:'AI summary'}
 .sec{scroll-margin-top:130px}
 .quiz-src .opt{display:inline-block;background:var(--bg2);border:1px solid var(--line2);border-radius:7px;padding:2px 9px;font-size:12px;color:var(--ink2);margin:4px 6px 0 0}
 /* ============ responsive ============ */
+@media (max-width:599px){
+  .topbar-inner{gap:8px}
+  .brand-tag{display:none}
+  .paper-lang-label{display:none}
+  .paper-lang{padding:2px 3px;gap:2px}
+  .paper-lang button{padding:3px 6px;font-size:11.5px}
+  .lang-switch{padding:2px;gap:2px}
+  .lang-switch button{padding:3px 8px;font-size:12px}
+  .iconbtn{padding:6px 9px;font-size:12.5px}
+  .github-link{padding:6px 4px}
+}
 @media (min-width:600px){
   .stat-grid{grid-template-columns:repeat(4,1fr)}
   .concept-grid{grid-template-columns:repeat(2,1fr)}
@@ -317,6 +341,12 @@ html[lang="en"] .key-sent.ai-sum::before{content:'AI summary'}
     <div class="lang-switch" role="group" aria-label="界面语言">
       <button id="langZh" class="on" type="button">中</button>
       <button id="langEn" type="button">EN</button>
+    </div>
+    <div class="paper-lang" role="group" aria-label="论文语言" title="论文语言">
+      <span class="paper-lang-label" id="paperLangLabel">论文语言</span>
+      <button id="paperLangAuto" class="on" type="button" data-pl="auto">原文</button>
+      <button id="paperLangZh" type="button" data-pl="zh">中</button>
+      <button id="paperLangEn" type="button" data-pl="en">EN</button>
     </div>
     <button id="aiBtn" class="iconbtn" type="button" title="AI 导读设置">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.9 2.4L22 18l-2.1.6L19 21l-.9-2.4L16 18l2.1-.6z"/></svg>
@@ -412,6 +442,7 @@ html[lang="en"] .key-sent.ai-sum::before{content:'AI summary'}
     <nav class="tabbar" aria-label="学习页分区">
       <div class="container tabbar-inner" id="tabbar"></div>
     </nav>
+    <div class="read-progress" aria-hidden="true"><i id="readBar"></i></div>
 
     <div class="panels container">
       <!-- 概览 -->
@@ -442,6 +473,10 @@ html[lang="en"] .key-sent.ai-sum::before{content:'AI summary'}
       <!-- 阅读路线 -->
       <section class="panel hidden" id="panel-roadmap">
         <div class="card">
+          <div class="card-h" id="secChartLabel">章节阅读时长</div>
+          <div class="chart-box" id="secChart" style="height:260px"></div>
+        </div>
+        <div class="card">
           <div class="card-h" id="roadLabel">阅读路线</div>
           <p class="tl-note" id="roadNote"></p>
           <div id="timeline"></div>
@@ -450,6 +485,10 @@ html[lang="en"] .key-sent.ai-sum::before{content:'AI summary'}
 
       <!-- 核心概念 -->
       <section class="panel hidden" id="panel-concepts">
+        <div class="card">
+          <div class="card-h" id="termPosLabel">术语章节分布</div>
+          <div class="chart-box" id="termPosChart" style="height:280px"></div>
+        </div>
         <div class="card">
           <div class="card-h" id="conLabel">核心概念</div>
           <div class="concept-grid" id="conceptGrid"></div>
@@ -575,8 +614,8 @@ html[lang="en"] .key-sent.ai-sum::before{content:'AI summary'}
 const I18N = {
   zh: {
     heroTitle1: '把一篇论文，', heroTitle2: '读成一幅地图',
-    langpill1: '简体中文', langpill2: 'English', langpill3: '可选 AI 导读',
-    heroSub: '上传论文 PDF，自动提取章节结构、核心术语与图表，生成一份可交互的学习页——阅读路线、概念图谱、图表速查与自测练习，界面语言一键切换。',
+    langpill1: '简体中文', langpill2: 'English', langpill3: '内置 AI 导读',
+    heroSub: '上传论文 PDF，自动提取章节结构、核心术语与图表，生成一份可交互的学习页——阅读路线、概念图谱、图表速查与自测练习，界面与论文内容均可一键切换中英双语。',
     dzTitle: '拖拽论文 PDF 到这里', dzSub: '或点击选择文件 · 支持 .pdf，最大 80MB',
     pickBtnTxt: '选择文件', demoBtnTxt: '试试示例论文',
     stepsTitle: '三步生成学习页',
@@ -586,14 +625,18 @@ const I18N = {
     f1t: '阅读路线图', f1d: '按章节组织的时间线，标注预计阅读时长与章节类型，点击直达原文。',
     f2t: '高频术语', f2d: '基于词频与分布自动提取关键术语，配首次出现的上下文例句。',
     f3t: '概念关系图', f3d: '术语共现关系网络，一眼看出论文的知识骨架与概念聚类。',
-    f4t: '图表与公式', f4d: '自动索引论文中的图、表与公式，附页码与页面缩略图速查。',
+    f4t: '图表与公式', f4d: '自动索引论文中的图、表与公式，直接从 PDF 提取图表本体，附页码速查。',
     f5t: '智能自测', f5d: '由关键句生成填空与归位题，读完即练，检验理解。',
-    f6t: '双语言界面', f6d: '中英文界面切换；接入 AI 后还可一键生成双语导读与翻译。',
-    homeFoot: '论文解析完全在本地浏览器中进行，不会上传到任何服务器。AI 增强功能可选，需自行配置 API Key。',
+    f6t: '双语阅读', f6d: '界面语言与论文内容语言独立切换；接入 AI 后可把论文自动翻译为中文或英文。',
+    homeFoot: '论文解析完全在本地浏览器中进行，不会上传到任何服务器。AI 导读已内置，可直接使用。',
     footerTxt: 'PaperLens · 论文可视化学习助手 · 本地解析，双语界面，可选 AI 增强',
+    paperLangLabel: '论文语言', paperLangAuto: '原文', paperLangZh: '中文', paperLangEn: 'English',
+    trDoing: '正在翻译论文…', trSub: 'AI 正在翻译标题、摘要、章节与自测题', trDone: '论文已翻译', trFail: '翻译失败：{e}',
+    trFlag: 'AI 翻译', trOrigLabel: '原文', trNote: '论文内容由 AI 翻译，专业术语保持原文。',
     paperKind: '论文 · PDF',
     chipPages: '页', chipWords: '字', chipSections: '章节', chipFigures: '图', chipTables: '表', chipEquations: '公式', chipRefs: '参考文献', chipMins: '预计阅读',
     tOverview: '概览', tRoadmap: '阅读路线', tConcepts: '核心概念', tFigures: '图表公式', tText: '原文速览', tQuiz: '自测练习', tRefs: '参考文献',
+    secChartLabel: '章节阅读时长', termPosLabel: '术语章节分布',
     tldrLabel: '一页读懂', tldrTag: 'TL;DR',
     absLabel: '摘要', absOrigLabel: '原文', absTransLabel: '译文（AI）',
     statLabel: '论文速览', kwLabel: '高频术语', graphLabel: '概念关系图',
@@ -622,9 +665,9 @@ const I18N = {
     toastAiOk: 'AI 导读已生成', toastAiFail: 'AI 生成失败：{e}', toastAiNoCfg: '请先在右上角 AI 设置中填写接口与 Key',
     toastAiSaved: '配置已保存', toastCopied: '已复制',
     aiModalTitleTxt: 'AI 导读设置',
-    aiModalSub: '配置任意 OpenAI 兼容的对话接口（豆包·火山方舟、DeepSeek、OpenAI 等），即可让 AI 生成论文导读、翻译与自测题。Key 仅保存在本机浏览器，不会上传。',
+    aiModalSub: '已内置 DeepSeek 与智谱 GLM 接口，可直接生成 AI 导读、翻译与自测题；也可切换到自定义服务商。Key 仅保存在本机浏览器。',
     aiProviderLabel: '服务商', aiBaseLabel: '接口地址 Base URL', aiModelLabel: '模型名称', aiKeyLabel: 'API Key',
-    aiKeyHint: '火山方舟：在控制台「API Key 管理」中创建，接口地址形如 https://ark.cn-beijing.volces.com/api/v3',
+    aiKeyHint: '内置 DeepSeek / 智谱 GLM Key；选择其他服务商时在此填入你自己的 Key。',
     aiBaseHintDoubao: '豆包·火山方舟默认接口地址',
     aiBaseHintDeepseek: 'DeepSeek 默认接口地址；模型可在下方修改（如 deepseek-flash / deepseek-v4-pro / deepseek-chat）',
     aiBaseHintGlm: '智谱 GLM 默认接口地址；glm-5.3-flash 等视觉模型可解释论文图表',
@@ -634,8 +677,8 @@ const I18N = {
   },
   en: {
     heroTitle1: 'Turn a paper into ', heroTitle2: 'a readable map',
-    langpill1: 'Simplified Chinese', langpill2: 'English', langpill3: 'Optional AI guide',
-    heroSub: 'Drop in a paper PDF and get an interactive learning page: reading roadmap, core terms, figure index, concept graph and self-quiz, with a one-click language switch.',
+    langpill1: 'Simplified Chinese', langpill2: 'English', langpill3: 'AI guide built in',
+    heroSub: 'Drop in a paper PDF and get an interactive learning page: reading roadmap, core terms, figure index, concept graph and self-quiz. Both the UI and the paper content can switch between Chinese and English.',
     dzTitle: 'Drag & drop a paper PDF here', dzSub: 'or click to choose · .pdf, up to 80MB',
     pickBtnTxt: 'Choose file', demoBtnTxt: 'Try sample paper',
     stepsTitle: 'Three steps to a learning page',
@@ -645,14 +688,18 @@ const I18N = {
     f1t: 'Reading roadmap', f1d: 'A per-section timeline with estimated reading time; click to jump to the source text.',
     f2t: 'Key terms', f2d: 'Frequency-based term extraction with first-occurrence context sentences.',
     f3t: 'Concept graph', f3d: 'Term co-occurrence network that reveals the paper\u2019s knowledge skeleton.',
-    f4t: 'Figures & math', f4d: 'Auto-index of figures, tables and equations with page thumbnails.',
+    f4t: 'Figures & math', f4d: 'Auto-index of figures, tables and equations; the figure itself is cropped right out of the PDF page.',
     f5t: 'Self-quiz', f5d: 'Fill-in-the-blank and section-matching questions generated from key sentences.',
-    f6t: 'Bilingual UI', f6d: 'Chinese / English interface; with AI enabled, get translated summaries too.',
+    f6t: 'Bilingual reading', f6d: 'UI language and paper-content language switch independently; with AI built in, the paper can be translated into Chinese or English on the fly.',
     homeFoot: 'Parsing runs entirely in your browser — paper content never leaves your machine. AI enhancement is optional and requires your own API key.',
     footerTxt: 'PaperLens · visual learning for papers · local parsing, bilingual UI, optional AI',
+    paperLangLabel: 'Paper language', paperLangAuto: 'Original', paperLangZh: '中文', paperLangEn: 'English',
+    trDoing: 'Translating the paper\u2026', trSub: 'AI is translating the title, abstract, sections and quiz', trDone: 'Paper translated', trFail: 'Translation failed: {e}',
+    trFlag: 'AI translation', trOrigLabel: 'Original', trNote: 'Content is translated by AI; technical terms stay in the original language.',
     paperKind: 'Paper · PDF',
     chipPages: 'pages', chipWords: 'words', chipSections: 'sections', chipFigures: 'figures', chipTables: 'tables', chipEquations: 'equations', chipRefs: 'refs', chipMins: 'reading time',
     tOverview: 'Overview', tRoadmap: 'Roadmap', tConcepts: 'Concepts', tFigures: 'Figures & Math', tText: 'Full Text', tQuiz: 'Quiz', tRefs: 'References',
+    secChartLabel: 'Reading time by section', termPosLabel: 'Term distribution across sections',
     tldrLabel: 'At a glance', tldrTag: 'TL;DR',
     absLabel: 'Abstract', absOrigLabel: 'Original', absTransLabel: 'Translation (AI)',
     statLabel: 'Paper snapshot', kwLabel: 'Key terms', graphLabel: 'Concept graph',
@@ -681,9 +728,9 @@ const I18N = {
     toastAiOk: 'AI guide ready', toastAiFail: 'AI failed: {e}', toastAiNoCfg: 'Set up API in the AI settings first (top-right)',
     toastAiSaved: 'Settings saved', toastCopied: 'Copied',
     aiModalTitleTxt: 'AI guide settings',
-    aiModalSub: 'Point to any OpenAI-compatible chat API (Doubao/Volcano Ark, DeepSeek, OpenAI\u2026) to generate guides, translations and quiz. The key stays in your browser only.',
+    aiModalSub: 'DeepSeek and Zhipu GLM are built in \u2014 generate AI guides, translations and quiz directly; or switch to a custom provider. Keys stay in your browser only.',
     aiProviderLabel: 'Provider', aiBaseLabel: 'Base URL', aiModelLabel: 'Model', aiKeyLabel: 'API key',
-    aiKeyHint: 'Volcano Ark: create an API key in the console; base URL is like https://ark.cn-beijing.volces.com/api/v3',
+    aiKeyHint: 'DeepSeek / Zhipu GLM keys are pre-filled; paste your own key when using another provider.',
     aiBaseHintDoubao: 'Default base URL for Doubao / Volcano Ark',
     aiBaseHintDeepseek: 'Default base URL for DeepSeek; model editable below (e.g. deepseek-flash / deepseek-v4-pro / deepseek-chat)',
     aiBaseHintGlm: 'Default base URL for Zhipu GLM; vision models such as glm-5.3-flash can explain paper figures',
@@ -882,8 +929,8 @@ function extractMediaItems(allLines){
     const cm = t.match(/\b(?:table|tab\.?)\s*(\d+)/i);
     const zm = t.match(/(?:^|[。；;：:])图\s*(\d+)/);
     const zm2 = t.match(/(?:^|[。；;：:])表\s*(\d+)/);
-    if (fm || zm) figures.push({ idx: fm ? fm[1] : zm[1], caption: cleanCaption(t), page: l.page });
-    if (cm || zm2) tables.push({ idx: cm ? cm[1] : zm2[1], caption: cleanCaption(t), page: l.page });
+    if (fm || zm) figures.push({ idx: fm ? fm[1] : zm[1], caption: cleanCaption(t), page: l.page, y: l.y });
+    if (cm || zm2) tables.push({ idx: cm ? cm[1] : zm2[1], caption: cleanCaption(t), page: l.page, y: l.y });
     if (isEqLine(t)) equations.push({ text: t.slice(0, 140), page: l.page });
   }
   return { figures, tables, equations };
@@ -964,6 +1011,19 @@ async function extractPaper(arrayBuffer, fileName, onProgress){
 const STOP_EN = new Set(('the,a,an,and,or,but,of,to,in,on,for,with,by,as,at,from,that,this,these,those,it,its,is,are,was,were,be,been,being,we,our,us,they,their,them,you,your,he,she,his,her,which,who,whom,whose,where,when,while,not,no,nor,do,does,did,have,has,had,will,would,can,could,may,might,shall,should,than,then,there,here,all,also,both,each,such,some,any,more,most,other,others,only,own,same,so,very,just,about,into,over,under,between,through,during,after,before,against,within,without,per,among,via,using,used,use,based,e.g,i.e,fig,table,et,al,one,two,three,new,shown,shows,show,results,result,method,methods,section,sections,paper,work,works,present,presents,propose,proposed,obtain,obtained,perform,performed,study,studies,model,data,figure,figures,tables,equation,respectively,however,therefore,thus,since,although,whereas,because,including,include,well,also,due,regarding,how,what,when,why').split(','));
 const STOP_ZH = new Set(('的了一是在和与对于为被将以此之其而或及等因由从向到个们有无可要会能上下里内外后前新旧本各某每按据经通过研究论文文献学报实验方法模型系统数据结果分析讨论总结结论相关背景综述概述理论技术应用任务场景问题解决方案评估验证比较对比主要重要不同各种其他这些那些这样那样还有以及并且如果因为所以但是虽然然而因此同时目前当前未来近年我们他们你们这个那个很都就并但只再又还曾').split(''));
 function isStopZh(gram){ for (const ch of gram) if (STOP_ZH.has(ch)) return true; return false; }
+/* 词边界启发：统计 term 出现位置中"左侧为边界"（标点/空白/数字/拉丁/常见虚词或行首）的比例。
+   比例过低的词大概率是更长词内部的碎片（如「券发行利」左侧恒为「债」），予以剔除。 */
+const VIRTUAL_LEFT = new Set(('的了过在是于与和及或而但且因为若则虽对把被将从向以就都也还更最较很不无有等及之其此').split(''));
+function leftBoundRatio(term, text){
+  let total = 0, bound = 0, idx = 0;
+  const B = /[，。；：、！？…—·“”‘’（）《》〈〉【】\s\dA-Za-z.,;:!?()[\]'"-]/;
+  while ((idx = text.indexOf(term, idx)) >= 0){
+    total++;
+    if (idx === 0 || B.test(text[idx - 1]) || VIRTUAL_LEFT.has(text[idx - 1])) bound++;
+    idx += term.length;
+  }
+  return total ? bound / total : 0;
+}
 function extractTerms(text, lang, topN){
   const sentences = splitSentences(text);
   const N = Math.max(1, sentences.length);
@@ -985,6 +1045,8 @@ function extractTerms(text, lang, topN){
     for (const [term, cnt] of arr){
       if (cnt < 3) continue;
       if (kept.some(k => k.includes(term))) continue;   // 已被更长/更高频词覆盖的碎片不再保留
+      if (term.length >= 3 && leftBoundRatio(term, text) < 0.35) continue;  // ≥3字且左邻多为实义汉字 → 更长词内部碎片
+      if (term.length === 2 && leftBoundRatio(term, text) < 0.02) continue;  // 2字从不独立出现（如「行利」「价效」）→ 碎片
       kept.push(term);
     }
     for (const term of kept) cand.push({ term, freq: freq.get(term) });
@@ -1137,33 +1199,70 @@ function analyzePaper(paper){
 
 /* ---------------- 图表 ---------------- */
 const CHARTS = [];
+function disposeChart(domId){
+  const el = $(domId);
+  if (!el) return;
+  const old = echarts.getInstanceByDom(el);
+  if (old){ const i = CHARTS.indexOf(old); if (i >= 0) CHARTS.splice(i, 1); old.dispose(); }
+}
 function renderKwChart(domId, terms){
+  disposeChart(domId);
   const el = $(domId);
   el.innerHTML = '';
   const chart = echarts.init(el);
   const list = terms.slice(0, 12).slice().reverse();
+  const maxV = Math.max.apply(null, list.map(x => x.score).concat([1]));
+  const colors = list.map((x, i) => {
+    if (i === list.length - 1) return new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: '#C97E1B' }, { offset: 1, color: '#E8B26A' }]);
+    const r = x.score / maxV;
+    return new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+      { offset: 0, color: '#2F5DA8' }, { offset: 1, color: '#7FA8D9' }]);
+  });
   chart.setOption({
-    grid: { left: 6, right: 40, top: 4, bottom: 4, containLabel: true },
-    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, confine: true },
+    grid: { left: 6, right: 48, top: 4, bottom: 4, containLabel: true },
+    tooltip: {
+      trigger: 'axis', axisPointer: { type: 'shadow' }, confine: true,
+      formatter: p => {
+        const d = p[0] || {};
+        const term = list[d.dataIndex];
+        if (!term) return '';
+        return '<b>' + esc(term.term) + '</b>' +
+          (term.context ? '<br/><span style="color:#5A6172;font-size:12px">' + esc(term.context.slice(0, 96)) + '…</span>' : '') +
+          '<br/>词频 ' + term.freq + ' · 重要度 ' + Math.round(term.score) + '<br/><span style="color:#2F5DA8">点击搜索原文 →</span>';
+      }
+    },
     xAxis: { type: 'value', axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: '#EEEAE0' } }, axisLabel: { color: '#9399A8', fontSize: 11 } },
     yAxis: { type: 'category', data: list.map(x => x.term), axisLine: { show: false }, axisTick: { show: false }, axisLabel: { color: '#23262F', fontSize: 13, fontWeight: 600 } },
-    series: [{ type: 'bar', data: list.map(x => Math.round(x.score)), barWidth: '58%', itemStyle: { color: '#2F5DA8', borderRadius: [0, 5, 5, 0] }, label: { show: true, position: 'right', color: '#5A6172', fontSize: 11, formatter: p => p.value } }]
+    series: [{
+      type: 'bar', data: list.map(x => Math.round(x.score)), barWidth: '60%',
+      itemStyle: { borderRadius: [0, 6, 6, 0], color: p => colors[p.dataIndex] },
+      label: { show: true, position: 'right', color: '#5A6172', fontSize: 11, formatter: p => p.value },
+      animationDuration: 650, animationEasing: 'cubicOut'
+    }]
   });
+  chart.on('click', p => { if (p.dataIndex != null && list[p.dataIndex]) searchTerm(list[p.dataIndex].term); });
   CHARTS.push(chart);
 }
 function renderGraphChart(domId, graph, terms){
+  disposeChart(domId);
   const el = $(domId);
   el.innerHTML = '';
   const chart = echarts.init(el);
   const ctxMap = new Map(terms.map(x => [x.term, x.context]));
+  const deg = new Array(graph.nodes.length).fill(0);
+  graph.links.forEach(l => { deg[l.source]++; deg[l.target]++; });
+  const maxDeg = Math.max.apply(null, deg.concat([1]));
   const nodes = graph.nodes.map((n, i) => ({
-    id: i, name: n.term, symbolSize: 12 + Math.min(32, Math.log2(n.freq || 2) * 9), value: n.freq,
-    itemStyle: { color: '#2F5DA8', opacity: 0.92 },
-    label: { show: true, fontSize: 12, color: '#23262F', fontWeight: 600, position: 'right' }
+    id: i, name: n.term, symbolSize: 13 + Math.min(30, Math.log2(n.freq || 2) * 8), value: n.freq, degree: deg[i],
+    itemStyle: {
+      color: deg[i] >= maxDeg * 0.6 ? '#C97E1B' : (deg[i] >= maxDeg * 0.3 ? '#5B8BC4' : '#2F5DA8'),
+      opacity: 0.94, shadowBlur: 8, shadowColor: 'rgba(47,93,168,.35)'
+    },
+    label: { show: true, fontSize: 11.5, color: '#23262F', fontWeight: 600, position: 'right' }
   }));
   const links = graph.links.map(l => ({
     source: l.source, target: l.target, value: l.weight,
-    lineStyle: { width: l.weight * 1.3, color: 'rgba(47,93,168,.28)', curveness: 0.06 }
+    lineStyle: { width: l.weight * 1.4, color: 'rgba(47,93,168,.3)', curveness: 0.05 }
   }));
   chart.setOption({
     tooltip: {
@@ -1172,35 +1271,172 @@ function renderGraphChart(domId, graph, terms){
         const d = p.data;
         if (d && d.name !== undefined){
           const ctx = ctxMap.get(d.name) || '';
-          return '<b>' + esc(d.name) + '</b> · 词频 ' + d.value + (ctx ? '<br/><span style="color:#5A6172">' + esc(ctx) + '</span>' : '');
+          return '<b>' + esc(d.name) + '</b> · 词频 ' + d.value + ' · 关联 ' + d.degree +
+            (ctx ? '<br/><span style="color:#5A6172;font-size:12px">' + esc(ctx.slice(0, 96)) + '…</span>' : '') +
+            '<br/><span style="color:#2F5DA8">点击搜索原文 →</span>';
         }
         return '';
       }
     },
     series: [{
       type: 'graph', layout: 'force', data: nodes, links, roam: true, draggable: true,
-      force: { repulsion: 240, edgeLength: [60, 140], gravity: 0.08 },
-      emphasis: { focus: 'adjacency', lineStyle: { width: 2 } }
+      force: { repulsion: 320, edgeLength: [80, 180], gravity: 0.05 },
+      emphasis: { focus: 'adjacency', lineStyle: { width: 2.5 } },
+      labelLayout: { hideOverlap: true },
+      animationDuration: 700, animationEasingUpdate: 'cubicOut'
     }]
+  });
+  chart.on('click', p => { const d = p.data; if (d && d.name !== undefined) searchTerm(d.name); });
+  CHARTS.push(chart);
+}
+/* 章节阅读时长分布（横向条，颜色按章节类型） */
+function renderSecChart(domId, sections){
+  disposeChart(domId);
+  const el = $(domId);
+  if (!el) return;
+  el.innerHTML = '';
+  const chart = echarts.init(el);
+  const colorMap = { bg: '#2E8B6D', method: '#2F5DA8', res: '#C97E1B', core: '#8A6BBF' };
+  const arr = sections.map((s, i) => ({ s, i })).reverse();
+  chart.setOption({
+    grid: { left: 6, right: 56, top: 4, bottom: 4, containLabel: true },
+    tooltip: {
+      trigger: 'axis', axisPointer: { type: 'shadow' }, confine: true,
+      formatter: p => {
+        const d = arr[p[0].dataIndex];
+        if (!d) return '';
+        return '<b>' + esc(pSecTitle(d.i)) + '</b><br/>' + T('secMetaMin', {n:d.s.minutes}) + ' · ' + T('secMetaChar', {n:fmt(d.s.words)}) + '<br/><span style="color:#2F5DA8">点击直达原文 →</span>';
+      }
+    },
+    xAxis: { type: 'value', axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: '#EEEAE0' } }, axisLabel: { color: '#9399A8', fontSize: 11 } },
+    yAxis: { type: 'category', data: arr.map(x => pSecTitle(x.i)), axisLine: { show: false }, axisTick: { show: false }, axisLabel: { color: '#23262F', fontSize: 13, fontWeight: 600 } },
+    series: [{
+      type: 'bar', data: arr.map(x => x.s.minutes), barWidth: '56%',
+      itemStyle: { borderRadius: [0, 6, 6, 0], color: p => colorMap[arr[p.dataIndex].s.type] || colorMap.core },
+      label: { show: true, position: 'right', color: '#5A6172', fontSize: 11, formatter: p => p.value + ' ' + (UI_LANG === 'zh' ? '分钟' : 'min') },
+      animationDuration: 600, animationEasing: 'cubicOut'
+    }]
+  });
+  chart.on('click', p => { if (p.dataIndex != null && arr[p.dataIndex]) openSection(arr[p.dataIndex].i); });
+  CHARTS.push(chart);
+}
+/* 术语 × 章节出现次数热力图 */
+function renderTermPosChart(domId, paper){
+  disposeChart(domId);
+  const el = $(domId);
+  if (!el) return;
+  el.innerHTML = '';
+  const chart = echarts.init(el);
+  const terms = paper.terms.slice(0, 8);
+  const secs = paper.sections.slice(0, 8);
+  const data = [];
+  secs.forEach((sec, si) => {
+    const low = sec.text.toLowerCase();
+    terms.forEach((term, ti) => {
+      let c = 0, idx = 0;
+      while ((idx = low.indexOf(term.term, idx)) >= 0){ c++; idx += term.term.length; }
+      if (c) data.push([ti, si, c]);
+    });
+  });
+  const maxC = Math.max.apply(null, data.map(d => d[2]).concat([1]));
+  const short = s => s.length > 7 ? s.slice(0, 7) + '…' : s;
+  chart.setOption({
+    tooltip: {
+      confine: true,
+      formatter: p => {
+        const v = p.value;
+        const term = terms[v[0]] && terms[v[0]].term;
+        const sec = secs[v[1]];
+        if (!term || !sec) return '';
+        return '<b>' + esc(term) + '</b> × ' + esc(pSecTitle(v[1])) + '<br/>出现 ' + v[2] + ' 次';
+      }
+    },
+    grid: { left: 76, right: 16, top: 10, bottom: 46 },
+    xAxis: { type: 'category', data: secs.map((s, i) => short(pSecTitle(i))), axisLabel: { color: '#5A6172', fontSize: 10, interval: 0, rotate: 30 }, axisLine: { show: false }, axisTick: { show: false } },
+    yAxis: { type: 'category', data: terms.map(x => x.term), axisLabel: { color: '#23262F', fontSize: 11, fontWeight: 600 }, axisLine: { show: false }, axisTick: { show: false } },
+    visualMap: { min: 0, max: maxC, calculable: false, show: false, inRange: { color: ['#E9EFF8', '#7FA8D9', '#2F5DA8', '#22467F'] } },
+    series: [{ type: 'heatmap', data, itemStyle: { borderColor: '#fff', borderWidth: 1, borderRadius: 3 }, emphasis: { itemStyle: { shadowBlur: 6, shadowColor: 'rgba(0,0,0,.25)' } } }]
   });
   CHARTS.push(chart);
 }
 window.addEventListener('resize', () => CHARTS.forEach(c => c.resize()));
 
 /* ---------------- AI 增强 ---------------- */
+const BUILTIN_AI = {
+  provider: 'deepseek',
+  baseUrl: 'https://api.deepseek.com',
+  model: 'deepseek-flash',
+  apiKey: 'sk-fa47750c3f9f4d9c9437880742ce5c1e'
+};
 const AI_PROVIDERS = {
   doubao: { base: 'https://ark.cn-beijing.volces.com/api/v3', model: 'doubao-seed-1.6-250615', hintKey: 'aiBaseHintDoubao' },
-  deepseek: { base: 'https://api.deepseek.com', model: 'deepseek-flash', hintKey: 'aiBaseHintDeepseek' },
-  glm: { base: 'https://open.bigmodel.cn/api/paas/v4', model: 'glm-5.3-flash', hintKey: 'aiBaseHintGlm' },
+  deepseek: { base: 'https://api.deepseek.com', model: 'deepseek-flash', hintKey: 'aiBaseHintDeepseek', key: 'sk-fa47750c3f9f4d9c9437880742ce5c1e' },
+  glm: { base: 'https://open.bigmodel.cn/api/paas/v4', model: 'glm-5.3-flash', hintKey: 'aiBaseHintGlm', key: 'db44efe8f4bf42ae9166f8645f171f55.biz7SP2YVLmzOlGv' },
   openai: { base: 'https://api.openai.com/v1', model: 'gpt-4o-mini', hintKey: '' },
   custom: { base: '', model: '', hintKey: '' }
 };
 function aiConfig(){
-  try { return JSON.parse(localStorage.getItem('paperlens-ai') || 'null'); } catch(e){ return null; }
+  try {
+    const v = JSON.parse(localStorage.getItem('paperlens-ai') || 'null');
+    if (v && v.baseUrl && v.apiKey && v.model) return v;
+  } catch(e){ /* 忽略损坏配置 */ }
+  return BUILTIN_AI;
 }
 function saveAiConfig(cfg){ localStorage.setItem('paperlens-ai', JSON.stringify(cfg)); }
 function aiCacheKey(paper, lang){
   return 'paperlens-ai-' + hashStr(paper.file.name + paper.file.size + paper.meta.title.slice(0, 40)) + '-' + lang;
+}
+function trCacheKey(paper, lang){
+  return 'paperlens-tr-' + hashStr(paper.file.name + paper.file.size + paper.meta.title.slice(0, 40)) + '-' + lang;
+}
+/* 论文内容翻译（标题/摘要/TL;DR/章节标题与导读/图注/自测题），缓存于 localStorage */
+async function aiTranslate(paper, lang, cfg){
+  const LANG_NAME = lang === 'zh' ? '简体中文' : 'English';
+  const secTexts = paper.sections.slice(0, 25).map((s, i) => '[' + i + '] ' + s.num + ' ' + s.title + ': ' + s.text.slice(0, 400)).join('\n');
+  const captions = paper.figures.map(f => 'fig' + f.idx + '|' + f.caption).concat(paper.tables.map(f => 'table' + f.idx + '|' + f.caption)).slice(0, 12).join('\n');
+  const prompt = 'You are a professional academic translator. Translate the following paper content into ' + LANG_NAME + '.\n' +
+    'Output STRICT JSON only (no markdown fences), exactly these keys:\n' +
+    '{"title":"","abstract":"","tldr":"","sec_titles":[""],"sec_summaries":[{"id":0,"summary":""}],"captions":{"fig1":"","table1":""},"quiz":[{"q":"","a":""}]}\n' +
+    'Rules: title/abstract/tldr are full translations; sec_titles length equals section count, each a translation of the heading (keep the numbering prefix such as "一、" or "1."); sec_summaries: one per section, a 2-3 sentence digest in ' + LANG_NAME + ' (empty string if section has no text); captions: translate the provided figure/table captions, use keys as given; quiz: 4 short self-check questions with answers in ' + LANG_NAME + '.\n' +
+    '--- Paper ---\nTitle: ' + paper.meta.title + '\nAbstract: ' + paper.abstract.slice(0, 1800) + '\nSections:\n' + secTexts + '\nCaptions:\n' + captions + '\n--- End ---';
+  const url = cfg.baseUrl.replace(/\/+$/, '') + '/chat/completions';
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + cfg.apiKey },
+    body: JSON.stringify({ model: cfg.model, messages: [{ role: 'user', content: prompt }], temperature: 0.3, max_tokens: 2800 })
+  });
+  if (!res.ok){
+    const body = await res.text().catch(() => '');
+    throw new Error('HTTP ' + res.status + ' ' + body.slice(0, 160));
+  }
+  const data = await res.json();
+  const content = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '';
+  const json = content.replace(/```(?:json)?/gi, '').trim();
+  const obj = JSON.parse(json);
+  return {
+    title: obj.title || '',
+    abstract: obj.abstract || '',
+    tldr: obj.tldr || '',
+    secTitles: Array.isArray(obj.sec_titles) ? obj.sec_titles : [],
+    secSummaries: Array.isArray(obj.sec_summaries) ? obj.sec_summaries : [],
+    captions: obj.captions || {},
+    quiz: Array.isArray(obj.quiz) ? obj.quiz : []
+  };
+}
+/* 论文语言取值辅助 */
+function tr(){ return state.tr[state.paperLang] || null; }
+function pTitle(){ const x = tr(); return (x && x.title) ? x.title : (state.paper.meta.title || state.paper.file.name); }
+function pAbstract(){ const x = tr(); return (x && x.abstract) ? x.abstract : state.paper.abstract; }
+function pTldr(){ const x = tr(); return (x && x.tldr) ? x.tldr : state.paper.tldr; }
+function pSecTitle(i){ const x = tr(); return (x && x.secTitles && x.secTitles[i]) ? x.secTitles[i] : state.paper.sections[i].title; }
+function pSecSummary(i){ const x = tr(); if (x && x.secSummaries){ const s = x.secSummaries.find(v => Number(v.id) === i); if (s && s.summary) return s.summary; } return null; }
+function pCaption(kind, idx, fallback){ const x = tr(); if (x && x.captions){ const v = x.captions[kind + String(idx == null ? '' : idx)]; if (v) return v; } return fallback; }
+function pQuiz(){
+  const x = tr();
+  if (x && x.quiz && x.quiz.length) return x.quiz.map(q => ({ type: 'tr', q: q.q, a: q.a, src: '' }));
+  const ai = currentAi();
+  if (ai && ai.quiz && ai.quiz.length) return ai.quiz.map((q, i) => ({ type: 'ai', q: q.q, a: q.a, src: '' }));
+  return state.paper.quiz;
 }
 async function aiGenerate(paper, lang, cfg){
   const LANG_NAME = lang === 'zh' ? '简体中文' : 'English';
@@ -1245,7 +1481,9 @@ const state = {
   aiBusy: false,
   tab: 'overview',
   search: '',
-  openSecs: new Set()
+  openSecs: new Set(),
+  paperLang: 'auto',
+  tr: {}
 };
 
 /* ---------------- 语言 ---------------- */
@@ -1274,6 +1512,11 @@ function applyLang(){
   $('#aiGenTxt').textContent = t('aiGenTxt');
   $('#aiBadgeTxt').textContent = t('aiBadgeTxt');
   $('#txtSearch').placeholder = t('txtSearchPh');
+  $('#paperLangLabel').textContent = t('paperLangLabel');
+  $('#paperLangAuto').textContent = t('paperLangAuto');
+  $('#paperLangZh').textContent = t('paperLangZh');
+  $('#paperLangEn').textContent = t('paperLangEn');
+  document.querySelectorAll('.paper-lang button').forEach(b => b.classList.toggle('on', b.dataset.pl === state.paperLang));
   $('#aiModalTitleTxt').textContent = t('aiModalTitleTxt');
   $('#aiModalSub').textContent = t('aiModalSub');
   $('#aiProviderLabel').textContent = t('aiProviderLabel');
@@ -1298,6 +1541,8 @@ function switchView(name){
 function reloadHome(){
   state.paper = null;
   state.ai = {};
+  state.tr = {};
+  state.paperLang = 'auto';
   state.search = '';
   state.openSecs = new Set();
   CHARTS.slice().forEach(c => { try { c.dispose(); } catch(e){} });
@@ -1311,10 +1556,13 @@ function renderHero(){
   const p = state.paper;
   const ai = currentAi();
   $('#paperKind').textContent = t('paperKind');
-  $('#paperTitle').textContent = p.meta.title || p.file.name;
-  const aiTitle = ai && ai.titleTranslation && p.lang !== UI_LANG ? ai.titleTranslation : '';
-  $('#paperAuthors').innerHTML = esc((p.meta.authors || []).join(' · ')) + (aiTitle ? '<br/><span style="color:var(--accent)">' + esc(aiTitle) + '</span>' : '');
-  if (!(p.meta.authors || []).length && !aiTitle) $('#paperAuthors').style.display = 'none';
+  $('#paperTitle').textContent = pTitle();
+  const trx = tr();
+  const aiTitle = (!trx) && ai && ai.titleTranslation && p.lang !== UI_LANG ? ai.titleTranslation : '';
+  $('#paperAuthors').innerHTML = esc((p.meta.authors || []).join(' · ')) +
+    (trx ? '<br/><span class="tr-flag">' + esc(t('trFlag')) + '</span>' : '') +
+    (aiTitle ? '<br/><span style="color:var(--accent)">' + esc(aiTitle) + '</span>' : '');
+  if (!(p.meta.authors || []).length && !aiTitle && !trx) $('#paperAuthors').style.display = 'none';
   else $('#paperAuthors').style.display = '';
   const chips = [
     [fmt(p.meta.pages), t('chipPages')],
@@ -1334,7 +1582,8 @@ function renderHero(){
 function renderTabbar(){
   const p = state.paper;
   const ai = currentAi();
-  const quizN = ai && ai.quiz && ai.quiz.length ? ai.quiz.length : p.quiz.length;
+  const trx = tr();
+  const quizN = trx && trx.quiz && trx.quiz.length ? trx.quiz.length : (ai && ai.quiz && ai.quiz.length ? ai.quiz.length : p.quiz.length);
   const figN = p.figures.length + p.tables.length;
   const defs = [
     ['overview', t('tOverview'), 0],
@@ -1372,10 +1621,15 @@ function renderCurrentPanel(){
 function renderOverview(){
   const p = state.paper;
   const ai = currentAi();
-  const tldr = (ai && ai.tldr) ? ai.tldr : p.tldr;
-  $('#tldrText').innerHTML = ((ai && ai.tldr) ? '<span class="ai-flag">' + t('absByAI') + '</span> ' : '') + esc(tldr);
+  const trx = tr();
+  const tldr = (trx && trx.tldr) ? trx.tldr : ((ai && ai.tldr) ? ai.tldr : p.tldr);
+  const flag = trx ? t('trFlag') : (ai && ai.tldr ? t('absByAI') : '');
+  $('#tldrText').innerHTML = (flag ? '<span class="ai-flag">' + esc(flag) + '</span> ' : '') + esc(tldr);
   $('#absLabel').textContent = t('absLabel');
-  $('#absText').innerHTML = '<div class="abs-label">' + esc(t('absOrigLabel')) + '</div>' + esc(p.abstract || t('noAbstract'));
+  const abs = pAbstract();
+  let absHtml = '<div class="abs-label">' + esc(trx ? t('trFlag') : t('absOrigLabel')) + '</div><div class="abs-orig">' + esc(abs || t('noAbstract')) + '</div>';
+  if (trx && p.abstract && p.abstract !== abs) absHtml += '<div class="abs-label abs-sub">' + esc(t('trOrigLabel')) + '</div><div class="abs-orig abs-muted">' + esc(p.abstract) + '</div>';
+  $('#absText').innerHTML = absHtml;
   $('#statLabel').textContent = t('statLabel');
   const stats = [
     [fmt(p.meta.pages), t('chipPages')],
@@ -1408,6 +1662,8 @@ function renderRoadmap(){
   const p = state.paper;
   $('#roadLabel').textContent = t('roadLabel');
   $('#roadNote').textContent = t('roadNote');
+  $('#secChartLabel').textContent = t('secChartLabel');
+  if (p.sections.length) renderSecChart('secChart', p.sections);
   if (!p.sections.length){ $('#timeline').innerHTML = '<div class="empty-hint">' + t('noAbstract') + '</div>'; return; }
   const tagClass = { bg:'bg', res:'res', method:'core', core:'core' };
   const tagTxt = { bg:t('tagBg'), res:t('tagRes'), method:t('tagMethod'), core:t('tagCore') };
@@ -1418,7 +1674,7 @@ function renderRoadmap(){
       '<span class="tl-dot"></span>' +
       '<div class="tl-num">' + esc(s.num || (i + 1)) + '</div>' +
       '<div class="tl-main">' +
-        '<div class="tl-title">' + esc(s.title) + '</div>' +
+        '<div class="tl-title">' + esc(pSecTitle(i)) + '</div>' +
         '<div class="tl-meta"><span class="tl-tag ' + (tagClass[s.type] || 'core') + '">' + (tagTxt[s.type] || '') + '</span>' +
           T('secMetaMin', {n:s.minutes}) + ' · ' + T('secMetaChar', {n:fmt(s.words)}) + ' · ' + t('chipPages') + ' ' + s.page + '</div>' +
         (key ? '<div class="tl-key">' + esc(key) + '</div>' : '') +
@@ -1435,6 +1691,8 @@ function renderConcepts(){
   const p = state.paper;
   const ai = currentAi();
   $('#conLabel').textContent = t('conLabel');
+  $('#termPosLabel').textContent = t('termPosLabel');
+  if (p.sections.length) renderTermPosChart('termPosChart', p);
   if (!p.conceptGraph.nodes.length){ $('#conceptGrid').innerHTML = '<div class="empty-hint">' + t('quizEmpty') + '</div>'; return; }
   const nodes = p.conceptGraph.nodes;
   const links = p.conceptGraph.links;
@@ -1444,7 +1702,7 @@ function renderConcepts(){
     const rels = links.filter(l => l.source === i || l.target === i)
       .map(l => { const o = l.source === i ? nodes[l.target] : nodes[l.source]; return o ? o.term : null; })
       .filter(Boolean).slice(0, 4);
-    html += '<div class="concept">' +
+    html += '<div class="concept" data-term="' + esc(nd.term) + '">' +
       '<div class="concept-head"><span class="concept-term">' + esc(nd.term) + '</span><span class="concept-freq">×' + fmt(nd.freq) + '</span></div>' +
       (aiEx && aiEx.explain ? '<div class="concept-ctx" style="color:var(--accent)">' + esc(aiEx.explain) + '</div>' : '') +
       (nd.context ? '<div class="concept-ctx">' + esc(nd.context) + '</div>' : '') +
@@ -1452,6 +1710,9 @@ function renderConcepts(){
     '</div>';
   });
   $('#conceptGrid').innerHTML = html;
+  $('#conceptGrid').querySelectorAll('.concept').forEach(c => {
+    c.addEventListener('click', () => searchTerm(c.dataset.term));
+  });
 }
 async function renderPageThumb(pageNum, container){
   try {
@@ -1468,6 +1729,38 @@ async function renderPageThumb(pageNum, container){
     await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
   } catch(e){ /* 缩略图失败可忽略 */ }
 }
+/* 直接提取图表区域：按标题行坐标裁切页面中的图表本体，而非整页缩略图 */
+async function renderMediaRegion(pageNum, item, container){
+  try {
+    if (!state._pdf) return;
+    const page = await state._pdf.getPage(pageNum);
+    const vp1 = page.getViewport({ scale: 1 });
+    const scale = Math.min(2.2, 1000 / vp1.width);
+    const vp = page.getViewport({ scale });
+    const full = document.createElement('canvas');
+    full.width = Math.floor(vp.width);
+    full.height = Math.floor(vp.height);
+    await page.render({ canvasContext: full.getContext('2d'), viewport: vp }).promise;
+    const yPx = vp.transform[5] + (item.y || 0) * vp.transform[3];
+    const regionH = Math.min(Math.floor(vp.height * 0.5), 460);
+    let top, bot;
+    if (item.kind === 'fig'){ top = Math.max(0, Math.floor(yPx) - regionH); bot = Math.min(vp.height, Math.ceil(yPx) + 16); }
+    else { top = Math.max(0, Math.floor(yPx) - 16); bot = Math.min(vp.height, Math.ceil(yPx) + regionH); }
+    const w = Math.floor(vp.width), h = bot - top;
+    if (h <= 14){
+      container.insertBefore(full, container.firstChild);
+      return;
+    }
+    const out = document.createElement('canvas');
+    out.width = w; out.height = h;
+    out.getContext('2d').drawImage(full, 0, top, w, h, 0, 0, w, h);
+    const img = document.createElement('img');
+    img.src = out.toDataURL('image/jpeg', 0.9);
+    img.alt = item.caption || '';
+    img.className = 'fig-img';
+    container.insertBefore(img, container.firstChild);
+  } catch(e){ /* 图表提取失败可忽略 */ }
+}
 function renderFigures(){
   const p = state.paper;
   $('#figLabel').textContent = t('figLabel');
@@ -1479,7 +1772,7 @@ function renderFigures(){
     figs.forEach((f, i) => {
       html += '<div class="fig">' +
         '<div class="fig-thumb" data-fig="' + i + '"><span class="fig-page">' + t('chipPages') + ' ' + f.page + '</span></div>' +
-        '<div class="fig-cap"><span class="fig-kind">' + (f.kind === 'fig' ? t('chipFigures') : t('chipTables')) + ' ' + (f.idx || '') + '</span><br/>' + esc(f.caption) + '</div>' +
+        '<div class="fig-cap"><span class="fig-kind">' + (f.kind === 'fig' ? t('chipFigures') : t('chipTables')) + ' ' + (f.idx || '') + '</span><br/>' + esc(pCaption(f.kind, f.idx, f.caption)) + '</div>' +
         '<button class="btn btn-sm ai-fig-btn" data-fig="' + i + '" type="button">' + t('figAi') + '</button>' +
         '<div class="ai-fig-out" data-out="' + i + '"></div>' +
       '</div>';
@@ -1489,7 +1782,7 @@ function renderFigures(){
       const box = $('#figGrid').querySelector('.fig-thumb[data-fig="' + i + '"]');
       if (!box) return;
       const io = new IntersectionObserver((entries, obs) => {
-        entries.forEach(en => { if (en.isIntersecting){ renderPageThumb(f.page, box); obs.disconnect(); } });
+        entries.forEach(en => { if (en.isIntersecting){ renderMediaRegion(f.page, f, box); obs.disconnect(); } });
       }, { rootMargin: '240px' });
       io.observe(box);
     });
@@ -1506,10 +1799,9 @@ function renderFigures(){
         out.textContent = t('figAiDoing');
         try {
           const box = $('#figGrid').querySelector('.fig-thumb[data-fig="' + btn.dataset.fig + '"]');
-          const cv = box && box.querySelector('canvas');
-          if (!cv){ out.textContent = t('figAiNoImg'); return; }
-          const dataUrl = cv.toDataURL('image/jpeg', 0.82);
-          const text = await aiExplainImage(dataUrl, figs[i], state.paper);
+          const im = box && box.querySelector('img');
+          if (!im || !im.src){ out.textContent = t('figAiNoImg'); return; }
+          const text = await aiExplainImage(im.src, figs[i], state.paper);
           out.textContent = text;
         } catch(e){
           out.textContent = T('toastAiFail', {e:(e.message || String(e)).slice(0, 200)});
@@ -1529,7 +1821,13 @@ function renderFigures(){
   }
 }
 async function aiExplainImage(dataUrl, fig, paper){
-  const cfg = aiConfig();
+  let cfg = aiConfig();
+  let local = null;
+  try { local = JSON.parse(localStorage.getItem('paperlens-ai') || 'null'); } catch(e){}
+  if (!local || local.provider === 'deepseek' || local.provider === 'doubao' || local.provider === 'openai'){
+    /* 看图属于多模态，默认走用户提供的智谱视觉模型；显式配置自定义/智谱时尊重用户选择 */
+    cfg = { baseUrl: AI_PROVIDERS.glm.base, apiKey: AI_PROVIDERS.glm.key, model: AI_PROVIDERS.glm.model };
+  }
   if (!cfg || !cfg.baseUrl || !cfg.apiKey) throw new Error(t('toastAiNoCfg'));
   const kindTxt = fig.kind === 'fig' ? (UI_LANG === 'zh' ? '图' : 'figure') : (UI_LANG === 'zh' ? '表' : 'table');
   const prompt = (UI_LANG === 'zh'
@@ -1576,6 +1874,7 @@ function renderText(){
   const q = state.search.trim().toLowerCase();
   $('#txtLabel').textContent = t('txtLabel');
   let meta = T('txtMeta', {n:fmt(p.sections.length), w:fmt(p.stats.words)});
+  if (tr()) meta += ' · ' + esc(t('trNote'));
   if (q){
     const occ = (p.rawText.toLowerCase().split(q).length - 1);
     meta += ' · ' + T('txtFound', {n:fmt(occ)});
@@ -1584,13 +1883,14 @@ function renderText(){
   if (!p.sections.length){ $('#secList').innerHTML = '<div class="empty-hint">' + t('noAbstract') + '</div>'; return; }
   let html = '';
   p.sections.forEach((s, i) => {
-    const aiSum = ai && ai.sectionSummaries ? ai.sectionSummaries.find(x => Number(x.id) === i) : null;
+    const trSum = pSecSummary(i);
+    const aiSum = trSum || (ai && ai.sectionSummaries ? ai.sectionSummaries.find(x => Number(x.id) === i) : null);
     const keyHtml = (aiSum && aiSum.summary ? '<div class="key-sent ai-sum">' + highlightAll(aiSum.summary, q) + '</div>' : '') +
       s.keySentences.map(k => '<div class="key-sent">' + highlightAll(k, q) + '</div>').join('');
     html += '<div class="sec' + (state.openSecs.has(i) ? ' open' : '') + '" data-sec="' + i + '">' +
       '<div class="sec-head">' +
         '<span class="sec-num">' + esc(s.num || (i + 1)) + '</span>' +
-        '<span class="sec-title">' + esc(s.title) + '</span>' +
+        '<span class="sec-title">' + esc(pSecTitle(i)) + '</span>' +
         '<span class="sec-meta">' + T('secMetaMin', {n:s.minutes}) + '</span>' +
         '<svg class="sec-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>' +
       '</div>' +
@@ -1608,16 +1908,13 @@ function renderText(){
 }
 function renderQuiz(){
   const p = state.paper;
-  const ai = currentAi();
   $('#quizLabel').textContent = t('quizLabel');
   $('#quizNote').textContent = t('quizNote');
-  let list = [];
-  if (ai && ai.quiz && ai.quiz.length) list = ai.quiz.map((x, i) => ({ type: 'ai', q: x.q, a: x.a, src: '' }));
-  else list = p.quiz;
+  let list = pQuiz();
   if (!list.length){ $('#quizList').innerHTML = '<div class="empty-hint">' + t('quizEmpty') + '</div>'; return; }
   let html = '';
   list.forEach((it, i) => {
-    if (it.type === 'blank' || it.type === 'ai'){
+    if (it.type === 'blank' || it.type === 'ai' || it.type === 'tr'){
       html += '<div class="quiz-card">' +
         '<div class="quiz-num">' + T('quizBlank', {n:i + 1}) + '</div>' +
         '<div class="quiz-q">' + esc(it.q) + '</div>' +
@@ -1666,6 +1963,26 @@ function openSection(i){
     setTimeout(() => els[i].scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
   }
 }
+/* 术语 → 原文搜索联动（图表/概念卡片点击） */
+function searchTerm(q){
+  if (!state.paper || !q) return;
+  $('#txtSearch').value = q;
+  state.search = q;
+  $('#txtClear').classList.remove('hidden');
+  switchTab('text');
+  renderText();
+  setTimeout(() => {
+    const els = $('#secList').querySelectorAll('.sec');
+    for (const el of els){
+      if ((el.textContent || '').toLowerCase().includes(q.toLowerCase())){
+        const i = parseInt(el.dataset.sec, 10);
+        if (i >= 0 && !state.openSecs.has(i)){ state.openSecs.add(i); el.classList.add('open'); }
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        break;
+      }
+    }
+  }, 80);
+}
 
 /* ---------------- 加载流程 ---------------- */
 function showOverlay(v){ $('#overlay').classList.toggle('hidden', !v); }
@@ -1712,6 +2029,8 @@ async function runPipeline(file){
     state._pdf = paper._pdfRef;
     delete paper._pdfRef;
     state.ai = {};
+    state.tr = {};
+    state.paperLang = 'auto';
     state.search = '';
     state.openSecs = new Set();
     setLoad(t('msgDone'), '', 1);
@@ -1755,6 +2074,7 @@ function setProvider(name){
   const def = AI_PROVIDERS[name] || AI_PROVIDERS.custom;
   if (def.base) $('#aiBase').value = def.base;
   if (def.model) $('#aiModel').value = def.model;
+  if (def.key) $('#aiKey').value = def.key;
   $('#aiBaseHint').textContent = def.hintKey ? t(def.hintKey) : '';
   $('#aiModal').dataset.provider = name;
 }
@@ -1821,10 +2141,48 @@ async function runAiGen(){
   }
 }
 
+function setPaperLang(l){
+  if (!state.paper) return;
+  state.paperLang = l;
+  document.querySelectorAll('.paper-lang button').forEach(b => b.classList.toggle('on', b.dataset.pl === l));
+  if (l === 'auto' || l === state.paper.lang){
+    renderAll();
+    return;
+  }
+  const cached = localStorage.getItem(trCacheKey(state.paper, l));
+  if (cached){
+    try { state.tr[l] = JSON.parse(cached); renderAll(); return; } catch(e){ /* 缓存损坏则重新翻译 */ }
+  }
+  if (state.aiBusy){ toast(t('toastAiBusy'), true); return; }
+  runPaperTranslate(l);
+}
+async function runPaperTranslate(lang){
+  const cfg = aiConfig();
+  if (!cfg || !cfg.baseUrl || !cfg.apiKey){ toast(t('toastAiNoCfg'), true); openAiModal(true); return; }
+  if (!state.paper) return;
+  if (state.aiBusy) return;
+  state.aiBusy = true;
+  showOverlay(true);
+  setLoad(t('trDoing'), t('trSub'), 0.25);
+  try {
+    const res = await aiTranslate(state.paper, lang, cfg);
+    state.tr[lang] = res;
+    try { localStorage.setItem(trCacheKey(state.paper, lang), JSON.stringify(res)); } catch(e){}
+    renderAll();
+    toast(t('trDone'));
+  } catch(e){
+    toast(T('trFail', {e:(e.message || String(e)).slice(0, 200)}), true);
+  } finally {
+    state.aiBusy = false;
+    showOverlay(false);
+  }
+}
+
 /* ---------------- 事件绑定 ---------------- */
 function wire(){
   $('#langZh').addEventListener('click', () => setLang('zh'));
   $('#langEn').addEventListener('click', () => setLang('en'));
+  document.querySelectorAll('.paper-lang button').forEach(b => b.addEventListener('click', () => setPaperLang(b.dataset.pl)));
   const dz = $('#dropzone');
   const pick = () => $('#fileInput').click();
   dz.addEventListener('click', pick);
@@ -1842,6 +2200,13 @@ function wire(){
     if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) runPipeline(e.dataTransfer.files[0]);
   });
   $('#aiBtn').addEventListener('click', () => openAiModal(false));
+  const updRead = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+    $('#readBar').style.width = pct + '%';
+  };
+  window.addEventListener('scroll', updRead, { passive: true });
+  updRead();
   $('#aiGenBtn').addEventListener('click', () => runAiGen());
   $('#reloadBtn').addEventListener('click', () => reloadHome());
   $('#aiSaveBtn').addEventListener('click', () => saveAiCfg(false));
@@ -1877,7 +2242,7 @@ function setLang(l){
   try { UI_LANG = localStorage.getItem('paperlens-ui-lang') || 'zh'; } catch(e){}
   applyLang();
   wire();
-  window.PaperLens = { loadDemo, runPipeline, setLang, switchTab, openSection, renderAll, getState: () => state };
+  window.PaperLens = { loadDemo, runPipeline, setLang, switchTab, openSection, renderAll, getState: () => state, aiConfig };
   const params = new URLSearchParams(location.search);
   if (params.get('demo') === '1') setTimeout(() => loadDemo(), 350);
 })();
